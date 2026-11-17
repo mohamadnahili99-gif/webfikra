@@ -184,6 +184,21 @@ export default function Home() {
           </a>
         </nav>
 
+        <div className="hidden items-center gap-3 lg:flex">
+          <Link
+            href="/restaurants/login"
+            className="rounded-full border border-white/20 px-5 py-2.5 text-sm font-bold text-white/85 transition hover:border-[#f47b35]/70 hover:text-[#ffad75]"
+          >
+            {arabic ? "دخول المطاعم" : "Restaurant Login"}
+          </Link>
+          <Link
+            href="/restaurants/register"
+            className="rounded-full bg-gradient-to-r from-[#f47b35] to-[#d95e1d] px-5 py-2.5 text-sm font-black text-white shadow-lg shadow-[#f47b35]/15 transition hover:-translate-y-0.5"
+          >
+            {arabic ? "إنشاء حساب مطعم" : "Create Restaurant Account"}
+          </Link>
+        </div>
+
         <button
           onClick={toggleLanguage}
           className="rounded-full border border-[#f47b35]/60 px-5 py-2 text-sm font-bold text-[#ffad75] transition hover:bg-[#f47b35] hover:text-white"
