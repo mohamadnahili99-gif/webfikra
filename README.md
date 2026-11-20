@@ -11,9 +11,9 @@ Modern bilingual digital experiences for restaurants, cafés, and bakeries.
 - Project inquiry form that prepares (but **does not send**) a WhatsApp message
 - Illustrative creative concepts, service descriptions, and FAQs
 - Bilingual `/privacy` and `/terms` pages, floating WhatsApp and back-to-top actions
-- Existing `/order` page and inactive `/restaurants/login` and `/restaurants/register` routes with clear service notices (no account forms)
+- Real Supabase-backed restaurant portal (feature-gated until configured): account login, restaurant editor, categories and items, publishing, and customer WhatsApp order handoff (without delivery fees). Portal routes are /restaurants/login, /restaurants/register and /restaurants/portal. Public restaurant menu is /r/[slug].
 
-**Important:** The interactive menu is a demonstration only. It does not place orders or process payments. The existing restaurant login and registration pages are placeholders; no account credentials are accepted. The marketing service packages are scopes for quotation, not fixed public prices.
+**Important:** The marketing demo menu is illustrative and does not place orders. Once Supabase is configured, published restaurant menus can prepare live customer-to-restaurant WhatsApp order messages; messages are sent by customers themselves. No backend order storage or payments exist. The restaurant portal remains disabled until the Supabase migration and secure environment configuration are completed. The marketing service packages are quoted individually.
 
 ## Getting started
 
@@ -42,7 +42,7 @@ GitHub Actions also runs these checks on pull requests targeting `main` and on p
 | --- | --- |
 | `app/page.tsx` | Main bilingual marketing page |
 | `app/components/RestaurantExperience.tsx` | Interactive sample menu and cart message preview |
-| `app/components/BrandStudioPreview.tsx` | 12-palette brand-style concept studio |\n| `app/components/FloatingActions.tsx` | Floating contact and back-to-top shortcuts |\n| `app/components/LegalContent.tsx` | Privacy and terms bilingual content |
+| `app/components/BrandStudioPreview.tsx` | 12-palette brand-style concept studio |\n| `app/components/FloatingActions.tsx` | Floating contact and back-to-top shortcuts |\n| `app/components/LegalContent.tsx` | Privacy and terms bilingual content |\n| `app/components/RestaurantPortal.tsx` | Restaurant dashboard & menu editing |\n| `app/components/RestaurantMenu.tsx` | White-label customer menu/cart |\n| `lib/platform.ts` | Auth, cookies and Supabase REST integration |\n| `supabase/migrations/20261119_webfikra_platform.sql` | Tenant-isolated database schema |
 | `app/components/LeadQuoteForm.tsx` | WhatsApp project inquiry builder |
 | `app/hooks/useWebfikraLanguage.ts` | Shared language preference |
 | `app/globals.css` | Brand typography and motion |
@@ -60,7 +60,7 @@ GitHub Actions also runs these checks on pull requests targeting `main` and on p
 - The WhatsApp phone number is set in `app/components/LeadQuoteForm.tsx` and `app/components/BrandStudioPreview.tsx`. Contact links are also in `app/components/FloatingActions.tsx`, `app/components/LegalContent.tsx`, and `app/page.tsx`.
 - If a custom domain is connected later, set `NEXT_PUBLIC_SITE_URL` to its full HTTPS origin, e.g. `https://your-domain.example`. In Vercel, the app otherwise uses the current deployment URL for social previews.
 
-## Deployment workflow
+## Restaurant platform\n\nSee **[docs/restaurant-platform.md](docs/restaurant-platform.md)** for the secure Supabase deployment guide, environment configuration, signup protection, and restaurant administration. The required variables are listed in `.env.example`. Do not add any secret/service-role key to the repo.\n\n## Deployment workflow
 
 1. Develop on `redesign-2026` and review pull request #2.
 2. Ensure all quality checks succeed.
@@ -77,10 +77,10 @@ No production merge is performed automatically from this branch.
 - [x] Live style preview with 12 curated palettes and custom accent
 - [x] Quote request composer with WhatsApp handoff
 - [x] Legal/support routes and links
-- [x] No misleading account-creation or password fields on inactive portal routes
+- [x] Account pages only request passwords when Supabase integration is configured
 - [x] Automated lint, TypeScript, production build, and browser smoke tests
-- [ ] Final human review of the design and business claims
+- [ ] Verify Supabase migration and Auth integration against a real project, including multi-account RLS isolation\n- [ ] Final human review of the design and business claims
 - [ ] Confirm phone number ownership, photos/media rights, and correct production domain
 - [ ] Obtain approval before merging the draft pull request into `main`
 
-**Not part of this launch:** database-backed customer accounts, online payments, live ordering backend, or a working restaurant admin dashboard. These require separate development, data/storage architecture, authentication, and production security review. Do not advertise them as live features.
+**Not part of this launch:** payments, backend order storage and tracking, inventory, custom restaurant domains, or media uploads from device. Database-backed restaurant management and public WhatsApp ordering code are included but cannot be described as live until the Supabase migration, environment variables, and cross-tenant security tests are completed. Do not advertise them as live features.
