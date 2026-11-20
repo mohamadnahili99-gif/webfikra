@@ -69,7 +69,7 @@ export default function Home() {
   ];
 
   return (
-    <main id="home" dir={arabic ? "rtl" : "ltr"} className="wf-site min-h-screen overflow-x-hidden bg-[#12100e] text-[#fff8f0]">
+    <main id="home" lang={arabic ? "ar" : "en"} dir={arabic ? "rtl" : "ltr"} className="wf-site min-h-screen overflow-x-hidden bg-[#12100e] text-[#fff8f0]">
       {/* Navigation */}
       <header className="sticky top-0 z-50 border-b border-white/10 bg-[#171310]/90 backdrop-blur-2xl">
         <div className="mx-auto flex h-[78px] max-w-7xl items-center justify-between gap-5 px-5 sm:px-7">
