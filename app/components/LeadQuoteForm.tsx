@@ -17,15 +17,33 @@ const projectTypes = [
   ["custom", "مشروع مخصص", "Custom project"],
 ] as const;
 
+const featureOptions = [
+  ["qr", "رمز QR للمنيو", "QR menu access"],
+  ["languages", "موقع عربي وإنجليزي", "Arabic & English"],
+  ["photos", "معرض صور الأطباق", "Food photo gallery"],
+  ["cart", "سلة طلبات واتساب", "WhatsApp ordering cart"],
+  ["admin", "إدارة الأصناف والأسعار", "Menu editing tools"],
+] as const;
+
 export default function LeadQuoteForm({ arabic }: Props) {
   const [name, setName] = useState("");
   const [business, setBusiness] = useState("");
   const [type, setType] = useState("restaurant");
   const [project, setProject] = useState("menu");
   const [details, setDetails] = useState("");
+  const [features, setFeatures] = useState<string[]>([]);
+
+  function toggleFeature(id: string) {
+    setFeatures((current) =>
+      current.includes(id) ? current.filter((item) => item !== id) : [...current, id],
+    );
+  }
+
+  const selectedFeatures = featureOptions.filter((feature) => features.includes(feature[0]));
 
   function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    if (!name.trim() || !business.trim()) return;
     const typeLabel = businessTypes.find((item) => item[0] === type);
     const projectLabel = projectTypes.find((item) => item[0] === project);
     const message = arabic
@@ -35,6 +53,7 @@ export default function LeadQuoteForm({ arabic }: Props) {
           "اسم النشاط: " + business.trim(),
           "نوع النشاط: " + (typeLabel?.[1] || ""),
           "المطلوب: " + (projectLabel?.[1] || ""),
+          selectedFeatures.length ? "المميزات التي تهمني: " + selectedFeatures.map((feature) => feature[1]).join("، ") : "",
           details.trim() ? "تفاصيل إضافية: " + details.trim() : "",
         ].filter(Boolean).join("\n")
       : [
@@ -43,6 +62,7 @@ export default function LeadQuoteForm({ arabic }: Props) {
           "Business: " + business.trim(),
           "Business type: " + (typeLabel?.[2] || ""),
           "Project: " + (projectLabel?.[2] || ""),
+          selectedFeatures.length ? "Interested features: " + selectedFeatures.map((feature) => feature[2]).join(", ") : "",
           details.trim() ? "More details: " + details.trim() : "",
         ].filter(Boolean).join("\n");
     window.open("https://wa.me/" + phone + "?text=" + encodeURIComponent(message), "_blank", "noopener,noreferrer");
@@ -104,15 +124,56 @@ export default function LeadQuoteForm({ arabic }: Props) {
               </select>
             </div>
           </div>
+          <fieldset className="mt-6">
+            <legend className={labelStyle}>
+              {arabic ? "ما المميزات التي تهمّك؟ (اختياري)" : "Features you're interested in (optional)"}
+            </legend>
+            <div className="grid gap-2 sm:grid-cols-2">
+              {featureOptions.map((feature) => {
+                const selected = features.includes(feature[0]);
+                return (
+                  <label key={feature[0]} className={selected
+                    ? "flex cursor-pointer items-center gap-3 rounded-xl border border-[#f4a66a] bg-[#f4a66a]/10 px-4 py-3 text-sm font-bold text-[#ffcfaa] transition"
+                    : "flex cursor-pointer items-center gap-3 rounded-xl border border-white/10 bg-white/[.035] px-4 py-3 text-sm text-white/70 transition hover:border-[#ba8e6e]"}>
+                    <input
+                      type="checkbox"
+                      name="features"
+                      value={feature[0]}
+                      checked={selected}
+                      onChange={() => toggleFeature(feature[0])}
+                      className="h-4 w-4 shrink-0 accent-[#f1a065]"
+                    />
+                    <span>{arabic ? feature[1] : feature[2]}</span>
+                  </label>
+                );
+              })}
+            </div>
+          </fieldset>
           <div className="mt-5">
             <label className={labelStyle} htmlFor="quote-details">{arabic ? "تفاصيل إضافية" : "Project details"}</label>
             <textarea id="quote-details" name="details" rows={4} maxLength={1000} value={details} onChange={(e) => setDetails(e.target.value)} className={inputStyle + " resize-y"} placeholder={arabic ? "ماذا تتخيّل لموقعك؟ (اختياري)" : "Tell us about your vision (optional)"} />
+          </div>
+          <div className="mt-6 rounded-2xl border border-[#755841] bg-[#231b16] p-5" aria-live="polite">
+            <p className="text-xs font-black tracking-[.1em] text-[#f5b180]">
+              {arabic ? "ملخص مشروعك المبدئي" : "YOUR PROJECT AT A GLANCE"}
+            </p>
+            <p className="mt-3 text-sm font-bold text-white/90">
+              {arabic ? projectTypes.find((item) => item[0] === project)?.[1] : projectTypes.find((item) => item[0] === project)?.[2]}
+            </p>
+            <p className="mt-2 text-xs leading-6 text-white/55">
+              {selectedFeatures.length
+                ? selectedFeatures.map((feature) => arabic ? feature[1] : feature[2]).join(" · ")
+                : (arabic ? "يمكنك اختيار الميزات التي تحتاجها من الأعلى." : "Select any additional features above.")}
+            </p>
+            <p className="mt-3 text-[11px] text-[#c7aa91]">
+              {arabic ? "هذا ملخص طلب، وليس عرض سعر أو تأكيداً لتنفيذ المميزات." : "This is a request summary, not a price quote or feature guarantee."}
+            </p>
           </div>
           <button type="submit" className="mt-7 flex w-full items-center justify-center gap-3 rounded-full bg-[#f19a53] px-7 py-4 text-base font-black text-[#21150e] transition hover:-translate-y-0.5 hover:bg-[#ffb276] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#ffb276]">
             {arabic ? "أرسل طلبي عبر واتساب" : "Continue on WhatsApp"}
             <span aria-hidden="true">↗</span>
           </button>
-          <p className="mt-4 text-center text-xs leading-6 text-white/40">{arabic ? "الضغط على الزر يفتح واتساب لتراجع الرسالة وترسلها بنفسك." : "WhatsApp opens so you can review and send the message yourself."}</p>
+          <p className="mt-4 text-center text-xs leading-6 text-white/40">{arabic ? "سيُفتح واتساب لمراجعة الرسالة وإرسالها بنفسك؛ لا نرسل شيئاً تلقائياً." : "Review and send the message yourself in WhatsApp. Nothing is submitted automatically."}</p>
         </form>
       </div>
     </section>
