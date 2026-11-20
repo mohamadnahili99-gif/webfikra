@@ -2,12 +2,14 @@
 
 import { useEffect, useState, type FormEvent } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 type Mode = "login" | "signup";
 type Session = { configured: boolean; authenticated: boolean; signupsAllowed: boolean };
 const inputClass = "mt-2 w-full rounded-xl border border-white/15 bg-[#241c17] px-4 py-3.5 text-sm text-white outline-none placeholder:text-white/30 focus:border-[#f5aa71]";
 
 export default function PortalAuth({ mode }: { mode: Mode }) {
+  const router = useRouter();
   const [session, setSession] = useState<Session | null>(null);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -22,11 +24,11 @@ export default function PortalAuth({ mode }: { mode: Mode }) {
       .then((data: Session) => {
         if (cancelled) return;
         setSession(data);
-        if (data.authenticated) window.location.replace("/restaurants/portal");
+        if (data.authenticated) router.replace("/restaurants/portal");
       })
       .catch(() => { if (!cancelled) setError("تعذّر التحقق من حالة الخدمة"); });
     return () => { cancelled = true; };
-  }, []);
+  }, [router]);
 
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -43,7 +45,7 @@ export default function PortalAuth({ mode }: { mode: Mode }) {
       if (mode === "signup" && !data.confirmed) {
         setNotice(data.message || "تحقق من بريدك الإلكتروني لتأكيد الحساب");
       } else {
-        window.location.assign("/restaurants/portal");
+        router.push("/restaurants/portal");
       }
     } catch (e) {
       setError(e instanceof Error ? e.message : "حدث خطأ غير متوقع");
