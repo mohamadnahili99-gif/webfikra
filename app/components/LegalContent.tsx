@@ -44,6 +44,12 @@ const content: Record<Kind, { titleAr: string; titleEn: string; introAr: string;
         bodyEn: "The hosting provider may process technical information needed to deliver and protect the site, such as access requests. Some illustrative images are loaded from an external image provider, which may receive requests from your browser. Their own policies apply.",
       },
       {
+        headingAr: "طلبات المطاعم عبر واتساب",
+        headingEn: "Restaurant orders through WhatsApp",
+        bodyAr: "في قوائم المطاعم المنشورة، يدخل الزبون اسمه وعنوانه وملاحظاته لإعداد رسالة الطلب. تُستخدم هذه المعلومات داخل المتصفح لإنشاء رابط واتساب ولا يحفظها WEBFIKRA في قاعدة الطلبات؛ لا تُشارك مع المطعم إلا عندما يختار الزبون إرسال الرسالة بنفسه. بعد الإرسال تطبق سياسات واتساب والمطعم الذي استقبل الرسالة.",
+        bodyEn: "On published restaurant menus, guests enter their name, address, and notes to prepare an order message. This data is used in the browser to create the WhatsApp link and is not stored by WEBFIKRA in an orders database. The restaurant receives it only if the guest chooses to send the message. WhatsApp's and the receiving restaurant's practices then apply.",
+      },
+      {
         headingAr: "تحديث هذه الصفحة",
         headingEn: "Changes to this notice",
         bodyAr: "إذا أضفنا حسابات مستخدمين أو نظام طلبات فعلياً أو وسيلة أخرى لجمع البيانات، فسنراجع سياسة الخصوصية قبل تفعيلها. يمكنك التواصل معنا عبر واتساب للاستفسار عن بيانات أرسلتها إلينا.",
