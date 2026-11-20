@@ -11,7 +11,7 @@ Modern bilingual digital experiences for restaurants, cafés, and bakeries.
 - Project inquiry form that prepares (but **does not send**) a WhatsApp message
 - Illustrative creative concepts, service descriptions, and FAQs
 - Bilingual `/privacy` and `/terms` pages, floating WhatsApp and back-to-top actions
-- Real Supabase-backed restaurant portal (feature-gated until configured): account login, restaurant editor, categories and items, publishing, and customer WhatsApp order handoff (without delivery fees). Portal routes are /restaurants/login, /restaurants/register and /restaurants/portal. Public restaurant menu is /r/[slug].
+- Real Supabase-backed restaurant portal (feature-gated until configured): account login, restaurant editor, categories, bilingual items, secure image uploads, publishing, and customer WhatsApp order handoff (without delivery fees). Portal routes are /restaurants/login, /restaurants/register and /restaurants/portal. Public restaurant menu is /r/[slug].
 
 **Important:** The marketing demo menu is illustrative and does not place orders. Once Supabase is configured, published restaurant menus can prepare live customer-to-restaurant WhatsApp order messages; messages are sent by customers themselves. No backend order storage or payments exist. The restaurant portal remains disabled until the Supabase migration and secure environment configuration are completed. The marketing service packages are quoted individually.
 
@@ -42,7 +42,7 @@ GitHub Actions also runs these checks on pull requests targeting `main` and on p
 | --- | --- |
 | `app/page.tsx` | Main bilingual marketing page |
 | `app/components/RestaurantExperience.tsx` | Interactive sample menu and cart message preview |
-| `app/components/BrandStudioPreview.tsx` | 12-palette brand-style concept studio |\n| `app/components/FloatingActions.tsx` | Floating contact and back-to-top shortcuts |\n| `app/components/LegalContent.tsx` | Privacy and terms bilingual content |\n| `app/components/RestaurantPortal.tsx` | Restaurant dashboard & menu editing |\n| `app/components/RestaurantMenu.tsx` | White-label customer menu/cart |\n| `lib/platform.ts` | Auth, cookies and Supabase REST integration |\n| `supabase/migrations/20261119_webfikra_platform.sql` | Tenant-isolated database schema |
+| `app/components/BrandStudioPreview.tsx` | 12-palette brand-style concept studio |\n| `app/components/FloatingActions.tsx` | Floating contact and back-to-top shortcuts |\n| `app/components/LegalContent.tsx` | Privacy and terms bilingual content |\n| `app/components/RestaurantPortal.tsx` | Restaurant dashboard & menu editing |\n| `app/components/RestaurantMenu.tsx` | White-label customer menu/cart |\n| `lib/platform.ts` | Auth, cookies and Supabase REST integration |\n| `supabase/migrations/20261119_webfikra_platform.sql` | Tenant-isolated database schema |\n| `supabase/migrations/20261119_webfikra_media.sql` | Secure menu-image storage bucket and upload permissions |
 | `app/components/LeadQuoteForm.tsx` | WhatsApp project inquiry builder |
 | `app/hooks/useWebfikraLanguage.ts` | Shared language preference |
 | `app/globals.css` | Brand typography and motion |
