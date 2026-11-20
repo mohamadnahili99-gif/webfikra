@@ -152,6 +152,22 @@ export default function RestaurantPortal() {
       await loadMenu(selectedId); setItem(blankItem); setNotice("تم حذف الصنف.");
     } catch (e) { setError(errorMessage(e)); } finally { setBusy(false); }
   }
+  async function uploadImage(file: File, field: "logo_url" | "cover_url" | "image_url") {
+    if (!selectedId || busy) { setError("احفظ المطعم أولاً قبل رفع الصور"); return; }
+    setBusy(true); setError(""); setNotice("");
+    try {
+      const form = new FormData();
+      form.append("restaurantId", selectedId);
+      form.append("file", file);
+      const response = await fetch("/api/portal/upload", { method: "POST", body: form });
+      const payload = await response.json();
+      if (!response.ok || !payload.url) throw new Error(payload.error || "تعذّر رفع الصورة");
+      if (field === "image_url") setItem((current) => ({ ...current, image_url: payload.url }));
+      else setRestaurant((current) => ({ ...current, [field]: payload.url }));
+      setNotice("تم رفع الصورة. اضغط حفظ لحفظها ضمن بيانات المطعم أو الصنف.");
+    } catch (e) { setError(errorMessage(e)); } finally { setBusy(false); }
+  }
+
   async function logout() {
     setBusy(true);
     try { await send("/api/portal/session", "POST", { mode: "logout" }); router.push("/restaurants/login"); }
@@ -226,7 +242,9 @@ export default function RestaurantPortal() {
                 <Field labelText="العنوان" value={restaurant.address} setValue={v=>editRestaurant("address",v)} maxLength={300} />
                 <Field labelText="ساعات العمل" value={restaurant.hours} setValue={v=>editRestaurant("hours",v)} maxLength={300} placeholder="10:00 صباحاً - 11:00 ليلاً"/>
                 <Field labelText="رابط صورة الشعار HTTPS" value={restaurant.logo_url} setValue={v=>editRestaurant("logo_url",v)} maxLength={1000} ltr/>
+                <UploadField labelText="رفع الشعار من جهازك" enabled={Boolean(selectedId) && !busy} onFile={(file)=>uploadImage(file,"logo_url")} />
                 <Field labelText="رابط صورة الغلاف HTTPS" value={restaurant.cover_url} setValue={v=>editRestaurant("cover_url",v)} maxLength={1000} ltr/>
+                <UploadField labelText="رفع صورة الغلاف من جهازك" enabled={Boolean(selectedId) && !busy} onFile={(file)=>uploadImage(file,"cover_url")} />
                 <Field labelText="رابط Instagram" value={restaurant.instagram} setValue={v=>editRestaurant("instagram",v)} maxLength={250} ltr/>
                 <Field labelText="رابط TikTok" value={restaurant.tiktok} setValue={v=>editRestaurant("tiktok",v)} maxLength={250} ltr/>
                 <label className={label}>العملة
@@ -244,7 +262,7 @@ export default function RestaurantPortal() {
                 </label>
                 <button type="submit" disabled={busy} className="rounded-full bg-[#ab673b] px-7 py-4 font-black text-white disabled:opacity-50 sm:col-span-2">{busy?"جار الحفظ…":"حفظ بيانات المطعم"}</button>
               </form>
-              <p className="mt-4 text-xs leading-6 text-[#897467]">للصور: استخدم روابط صور HTTPS عامة. رفع الملفات من الجهاز سيحتاج إلى تفعيل التخزين لاحقاً.</p>
+              <p className="mt-4 text-xs leading-6 text-[#897467]">للصور: يمكنك رفعها من جهازك بعد حفظ المطعم، أو لصق رابط HTTPS. يلزم تشغيل ترحيل تخزين Supabase لعمل الرفع.</p>
               {selectedId && <div className="mt-8 flex flex-wrap items-center gap-4 rounded-2xl border border-[#e3d5c7] bg-white p-5">
                 <div><p className="text-sm font-black">رابط المنيو</p><p dir="ltr" className="mt-2 break-all text-xs text-[#947360]">/r/{restaurant.slug}</p><p className="mt-2 text-xs text-[#9a8475]">{restaurant.published ? "متاح للزبائن" : "غير منشور حالياً"}</p></div>
                 {restaurant.published && <Link href={publicLink} target="_blank" className="rounded-full bg-[#2c211a] px-5 py-3 text-xs font-bold text-white">فتح منيو المطعم ↗</Link>}
@@ -282,6 +300,7 @@ export default function RestaurantPortal() {
                   </label>
                   <Field labelText={"السعر (" + restaurant.currency + ") *"} value={item.price} setValue={v=>setItem(c=>({...c,price:v}))} required ltr placeholder="0.00" />
                   <Field labelText="رابط صورة الصنف HTTPS" value={item.image_url} setValue={v=>setItem(c=>({...c,image_url:v}))} maxLength={1000} ltr/>
+                  <UploadField labelText="رفع صورة الصنف من جهازك" enabled={!busy} onFile={(file)=>uploadImage(file,"image_url")} />
                   <Field labelText="وصف / مكونات الصنف" value={item.description} setValue={v=>setItem(c=>({...c,description:v}))} maxLength={1000}/>
                   <label className={label}>الترتيب<input type="number" min={0} max={9999} className={input} value={item.position} onChange={e=>setItem(c=>({...c,position:Number(e.target.value)}))}/></label>
                   <label className="flex items-center gap-3 text-sm font-bold"><input type="checkbox" checked={item.visible} onChange={e=>setItem(c=>({...c,visible:e.target.checked}))}/> إظهار الصنف</label>
@@ -302,6 +321,24 @@ export default function RestaurantPortal() {
       </div>
     </main>
   );
+}
+
+function UploadField({ labelText, enabled, onFile }: { labelText: string; enabled: boolean; onFile: (file: File) => void }) {
+  return <label className={label}>
+    {labelText}
+    <input
+      type="file"
+      accept="image/jpeg,image/png,image/webp"
+      disabled={!enabled}
+      onChange={(event) => {
+        const selected = event.target.files?.[0];
+        if (selected) onFile(selected);
+        event.target.value = "";
+      }}
+      className="mt-2 block w-full cursor-pointer rounded-xl border border-dashed border-[#d7b99e] bg-[#f4e9db] p-3 text-xs text-[#80634b] file:me-3 file:rounded-full file:border-0 file:bg-[#ac693f] file:px-4 file:py-2 file:font-bold file:text-white disabled:opacity-45"
+    />
+    <span className="mt-1 block text-[11px] font-normal text-[#947c6b]">JPG / PNG / WebP — حتى 5 ميغابايت</span>
+  </label>;
 }
 
 function toDraft(r: Restaurant): Draft {
