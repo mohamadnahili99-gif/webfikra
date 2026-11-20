@@ -165,7 +165,7 @@ export default function BrandStudioPreview({ arabic }: Props) {
                     <h4 className="text-lg font-black">{t("قائمتنا", "Explore the menu")}</h4>
                     <span className="text-[10px] font-black" style={{color:theme.accent}}>01 / 03</span>
                   </div>
-                  <div className={viewport === "phone" ? "grid gap-3" : "grid grid-cols-3 gap-3"}>
+                  <div className={viewport === "phone" ? "grid gap-3" : "grid grid-cols-1 gap-3 md:grid-cols-3"}>
                     {business.dishes.map((dish) => (
                       <div key={dish.en} className="flex items-center gap-3 rounded-2xl p-3" style={{background:theme.panel}}>
                         <span aria-hidden="true" className="text-3xl">{dish.emoji}</span>
