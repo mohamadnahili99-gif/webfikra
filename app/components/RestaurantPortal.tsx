@@ -14,7 +14,7 @@ type ItemDraft = { id: string; category_id: string; name: string; name_en: strin
 const blankRestaurant: Draft = {
   slug: "", name: "", name_en: "", description: "", description_en: "", whatsapp: "", address: "", hours: "",
   instagram: "", tiktok: "", logo_url: "", cover_url: "",
-  accent_color: "#EF9754", currency: "USD", published: false,
+  accent_color: "#EF9754", currency: "LBP", published: false,
 };
 const blankCategory: CategoryDraft = { id: "", name: "", name_en: "", position: 0, visible: true };
 const blankItem: ItemDraft = { id: "", category_id: "", name: "", name_en: "", description: "", description_en: "", price: "0", image_url: "", position: 0, visible: true };
@@ -116,6 +116,17 @@ export default function RestaurantPortal() {
       await loadRestaurants(result.restaurant.id);
       setNotice("تم حفظ بيانات المطعم بنجاح.");
     } catch (e) { setError(errorMessage(e)); } finally { setBusy(false); }
+  }
+  async function saveCurrency() {
+    if (!selectedId || busy) return;
+    setBusy(true); setError(""); setNotice("");
+    try {
+      // The currency is a restaurant-level setting. Save it before pricing items.
+      await send("/api/portal/restaurants", "PATCH", { ...restaurant, id: selectedId });
+      await loadRestaurants(selectedId);
+      setNotice("تم حفظ العملة. الأسعار الموجودة لا تتحوّل تلقائياً؛ راجعها إذا غيّرت العملة.");
+    } catch (e) { setError(errorMessage(e)); }
+    finally { setBusy(false); }
   }
   async function saveCategory(event: FormEvent<HTMLFormElement>) {
     event.preventDefault(); if (!selectedId || busy) return;
@@ -249,7 +260,7 @@ export default function RestaurantPortal() {
                 <Field labelText="رابط Instagram" value={restaurant.instagram} setValue={v=>editRestaurant("instagram",v)} maxLength={250} ltr/>
                 <Field labelText="رابط TikTok" value={restaurant.tiktok} setValue={v=>editRestaurant("tiktok",v)} maxLength={250} ltr/>
                 <label className={label}>العملة
-                  <select className={input} value={restaurant.currency} onChange={e=>editRestaurant("currency",e.target.value as "USD" | "LBP")}><option value="USD">دولار أمريكي USD</option><option value="LBP">ليرة لبنانية LBP</option></select>
+                  <select className={input} value={restaurant.currency} onChange={e=>editRestaurant("currency",e.target.value as "USD" | "LBP")}><option value="LBP">ليرة لبنانية (ل.ل. / LBP)</option><option value="USD">دولار أمريكي ($ / USD)</option></select>
                 </label>
                 <label className={label}>لون العلامة
                   <div className="mt-2 flex items-center gap-3"><input aria-label="اختيار اللون" type="color" value={restaurant.accent_color} onChange={e=>editRestaurant("accent_color",e.target.value)} className="h-11 w-14 cursor-pointer rounded-lg border border-[#ddc7b5]"/><span dir="ltr" className="text-sm">{restaurant.accent_color}</span></div>
@@ -295,6 +306,24 @@ export default function RestaurantPortal() {
 
             {tab === "items" && <section className="rounded-3xl border border-[#e1d2c5] bg-[#fffaf5] p-6 sm:p-9">
               <h2 className="text-2xl font-black">الأصناف والأسعار</h2>
+              <div className="mt-5 rounded-2xl border border-[#dac4ae] bg-[#f5e9dc] p-4 sm:p-5">
+                <label className={label+" block max-w-sm"}>
+                  عملة التسعير في المنيو
+                  <select aria-label="عملة تسعير الأصناف" value={restaurant.currency}
+                    onChange={e=>editRestaurant("currency", e.target.value as "USD" | "LBP")}
+                    className={input}>
+                    <option value="LBP">ليرة لبنانية (ل.ل. / LBP)</option>
+                    <option value="USD">دولار أمريكي ($ / USD)</option>
+                  </select>
+                </label>
+                <div className="mt-3 flex flex-wrap items-center gap-3">
+                  <button type="button" onClick={saveCurrency} disabled={busy}
+                    className="rounded-full bg-[#ad6638] px-5 py-2.5 text-xs font-black text-white disabled:opacity-50">حفظ عملة المطعم</button>
+                  <p className="text-xs leading-6 text-[#796452]">
+                    اختر العملة واحفظها قبل إضافة الأسعار. تغيير العملة لا يحوّل الأسعار القديمة تلقائياً.
+                  </p>
+                </div>
+              </div>
               {categories.length === 0 ? <p className="mt-6 text-sm text-[#936f55]">أضف قسماً أولاً قبل إضافة الأصناف.</p> : (
                 <form onSubmit={saveItem} className="mt-7 grid gap-4 sm:grid-cols-2">
                   <Field labelText="اسم الصنف *" value={item.name} setValue={v=>setItem(c=>({...c,name:v}))} required maxLength={120}/>
@@ -304,7 +333,7 @@ export default function RestaurantPortal() {
                       <option value="">اختر القسم</option>{categories.map(c=><option key={c.id} value={c.id}>{c.name}</option>)}
                     </select>
                   </label>
-                  <Field labelText={"السعر (" + restaurant.currency + ") *"} value={item.price} setValue={v=>setItem(c=>({...c,price:v}))} required ltr placeholder="0.00" />
+                  <Field labelText={"السعر (" + (restaurant.currency === "LBP" ? "ل.ل." : "$") + ") *"} value={item.price} setValue={v=>setItem(c=>({...c,price:v}))} required ltr placeholder={restaurant.currency === "LBP" ? "120000" : "5.00"} />
                   <Field labelText="رابط صورة الصنف HTTPS" value={item.image_url} setValue={v=>setItem(c=>({...c,image_url:v}))} maxLength={1000} ltr/>
                   <UploadField labelText="رفع صورة الصنف من جهازك" enabled={!busy} onFile={(file)=>uploadImage(file,"image_url")} />
                   <Field labelText="وصف / مكونات الصنف" value={item.description} setValue={v=>setItem(c=>({...c,description:v}))} maxLength={1000}/>
@@ -318,7 +347,7 @@ export default function RestaurantPortal() {
                 </form>
               )}
               <div className="mt-8 space-y-3">{items.map(i=><div key={i.id} className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-[#e4d8cd] bg-white p-4">
-                <div><p className="font-black">{i.name}</p><p className="mt-1 text-xs text-[#9b8171]">{categories.find(c=>c.id===i.category_id)?.name || "قسم"} · {Number(i.price).toFixed(2)} {restaurant.currency} · {i.visible?"ظاهر":"مخفي"}</p></div>
+                <div><p className="font-black">{i.name}</p><p className="mt-1 text-xs text-[#9b8171]">{categories.find(c=>c.id===i.category_id)?.name || "قسم"} · {restaurant.currency === "LBP" ? Math.round(Number(i.price)).toLocaleString("en-US")+" ل.ل." : "$"+Number(i.price).toFixed(2)} · {i.visible?"ظاهر":"مخفي"}</p></div>
                 <div className="flex gap-3 text-xs font-bold"><button type="button" className="text-[#9f6039]" onClick={()=>setItem({id:i.id,category_id:i.category_id,name:i.name,name_en:i.name_en,description:i.description,description_en:i.description_en,price:String(i.price),image_url:i.image_url,position:i.position,visible:i.visible})}>تعديل</button><button disabled={busy} type="button" onClick={()=>removeItem(i.id)} className="text-red-700">حذف</button></div>
               </div>)}</div>
               {!items.length && <p className="mt-6 text-sm text-[#9b8371]">لم تُضف أصنافاً بعد.</p>}
