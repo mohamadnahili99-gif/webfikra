@@ -81,7 +81,14 @@ alter table public.wf_items enable row level security;
 
 -- Explicit privileges; never expose privileged keys in the browser.
 revoke all on public.wf_restaurants, public.wf_categories, public.wf_items from public;
-grant select on public.wf_restaurants, public.wf_categories, public.wf_items to anon;
+-- Restrict anonymous queries to public menu columns; never expose owner_id.
+grant select (id, slug, name, description, whatsapp, address, hours, instagram, tiktok,
+              logo_url, cover_url, accent_color, currency, published)
+on public.wf_restaurants to anon;
+grant select (id, restaurant_id, name, position, visible)
+on public.wf_categories to anon;
+grant select (id, restaurant_id, category_id, name, description, price, image_url, position, visible)
+on public.wf_items to anon;
 grant select, insert, update, delete on public.wf_restaurants, public.wf_categories, public.wf_items to authenticated;
 
 drop policy if exists wf_restaurants_public_read on public.wf_restaurants;
