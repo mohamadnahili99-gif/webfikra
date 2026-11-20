@@ -7,7 +7,9 @@ create table if not exists public.wf_restaurants (
   owner_id uuid not null references auth.users(id) on delete cascade,
   slug text not null unique check (slug ~ '^[a-z0-9][a-z0-9-]{2,39}$'),
   name text not null check (char_length(name) between 2 and 100),
+  name_en text not null default '' check (char_length(name_en) <= 100),
   description text not null default '' check (char_length(description) <= 1200),
+  description_en text not null default '' check (char_length(description_en) <= 1200),
   whatsapp text not null check (whatsapp ~ '^[0-9]{7,15}$'),
   address text not null default '' check (char_length(address) <= 300),
   hours text not null default '' check (char_length(hours) <= 300),
@@ -26,6 +28,7 @@ create table if not exists public.wf_categories (
   id uuid primary key default gen_random_uuid(),
   restaurant_id uuid not null references public.wf_restaurants(id) on delete cascade,
   name text not null check (char_length(name) between 1 and 90),
+  name_en text not null default '' check (char_length(name_en) <= 90),
   position integer not null default 0 check (position between 0 and 9999),
   visible boolean not null default true
 );
@@ -35,7 +38,9 @@ create table if not exists public.wf_items (
   restaurant_id uuid not null references public.wf_restaurants(id) on delete cascade,
   category_id uuid not null references public.wf_categories(id) on delete cascade,
   name text not null check (char_length(name) between 1 and 120),
+  name_en text not null default '' check (char_length(name_en) <= 120),
   description text not null default '' check (char_length(description) <= 1000),
+  description_en text not null default '' check (char_length(description_en) <= 1000),
   price numeric(12,2) not null check (price >= 0 and price <= 9999999999.99),
   image_url text not null default '' check (char_length(image_url) <= 1000),
   visible boolean not null default true,
@@ -82,12 +87,12 @@ alter table public.wf_items enable row level security;
 -- Explicit privileges; never expose privileged keys in the browser.
 revoke all on public.wf_restaurants, public.wf_categories, public.wf_items from public;
 -- Restrict anonymous queries to public menu columns; never expose owner_id.
-grant select (id, slug, name, description, whatsapp, address, hours, instagram, tiktok,
+grant select (id, slug, name, name_en, description, description_en, whatsapp, address, hours, instagram, tiktok,
               logo_url, cover_url, accent_color, currency, published)
 on public.wf_restaurants to anon;
-grant select (id, restaurant_id, name, position, visible)
+grant select (id, restaurant_id, name, name_en, position, visible)
 on public.wf_categories to anon;
-grant select (id, restaurant_id, category_id, name, description, price, image_url, position, visible)
+grant select (id, restaurant_id, category_id, name, name_en, description, description_en, price, image_url, position, visible)
 on public.wf_items to anon;
 grant select, insert, update, delete on public.wf_restaurants, public.wf_categories, public.wf_items to authenticated;
 
