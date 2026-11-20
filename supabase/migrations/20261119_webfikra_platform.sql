@@ -10,6 +10,7 @@ create table if not exists public.wf_restaurants (
   description text not null default '' check (char_length(description) <= 1200),
   whatsapp text not null check (whatsapp ~ '^[0-9]{7,15}$'),
   address text not null default '' check (char_length(address) <= 300),
+  hours text not null default '' check (char_length(hours) <= 300),
   instagram text not null default '' check (char_length(instagram) <= 250),
   tiktok text not null default '' check (char_length(tiktok) <= 250),
   logo_url text not null default '' check (char_length(logo_url) <= 1000),
