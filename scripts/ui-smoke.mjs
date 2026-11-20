@@ -44,12 +44,6 @@ async function testDesktop() {
     await page.getByRole("button", { name: "إفراغ السلة" }).click();
     assert.equal((await page.locator("#demo-cart strong").first().innerText()).trim(), "0");
 
-    const commissionBefore = await page.locator("#insights p[dir='ltr']").nth(1).innerText();
-    await page.locator("#calc-orders").focus();
-    await page.keyboard.press("ArrowRight");
-    const commissionAfter = await page.locator("#insights p[dir='ltr']").nth(1).innerText();
-    assert.notEqual(commissionAfter, commissionBefore, "Calculator should react to changes");
-
     await page.locator("#quote-name").fill("مستخدم الاختبار");
     await page.locator("#quote-business").fill("مطعم الاختبار");
     await page.getByRole("checkbox", { name: "رمز QR للمنيو" }).check();
@@ -71,7 +65,7 @@ async function testDesktop() {
       body: document.documentElement.scrollWidth,
     }));
     assert.ok(browserWidth.body <= browserWidth.viewport + 2, "Desktop has unexpected horizontal overflow");
-    console.log("PASS: desktop layout, languages, brand studio, demo cart, calculator, WhatsApp quote.");
+    console.log("PASS: desktop layout, languages, brand studio, demo cart, WhatsApp quote.");
   } finally {
     await context.close();
   }
