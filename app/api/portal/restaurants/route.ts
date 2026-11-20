@@ -1,5 +1,5 @@
 import {
-  cleanText, enabled, failure, priceOf, readJson, requirePortal,
+  cleanText, failure, readJson, requirePortal,
   sameOrigin, slugIsValid, success, supabase, uuid, validImage, validSocial,
   type Restaurant,
 } from "@/lib/platform";
