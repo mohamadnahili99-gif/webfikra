@@ -23,10 +23,10 @@ type AuthAnswer = {
 };
 
 export async function GET() {
-  if (!enabled()) return success({ configured: false, authenticated: false });
+  if (!enabled()) return success({ configured: false, authenticated: false, signupsAllowed: false });
   const identity = await getPortalIdentity();
-  if (!identity.ok) return success({ configured: true, authenticated: false });
-  return success({ configured: true, authenticated: true, user: identity.user });
+  if (!identity.ok) return success({ configured: true, authenticated: false, signupsAllowed: process.env.WEBFIKRA_ALLOW_SIGNUPS === "true" });
+  return success({ configured: true, authenticated: true, user: identity.user, signupsAllowed: process.env.WEBFIKRA_ALLOW_SIGNUPS === "true" });
 }
 
 export async function POST(request: Request) {
