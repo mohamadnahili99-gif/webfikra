@@ -89,7 +89,10 @@ async function testDesktop() {
 
     const termsResponse = await page.goto(baseUrl + "/terms", { waitUntil: "domcontentloaded" });
     assert.equal(termsResponse?.status(), 200, "Terms page should load");
-    assert.match(await page.locator("h1").innerText(), /Website Use Terms/);
+    // DOMContentLoaded can precede hydration. Wait for the saved language to apply.
+    await page.getByRole("heading", { name: "Website Use Terms" }).waitFor({ timeout: 15000 });
+    await page.getByRole("button", { name: "عربي" }).click();
+    await page.getByRole("heading", { name: "شروط استخدام الموقع" }).waitFor();
 
     for (const path of ["/restaurants/login", "/restaurants/register"]) {
       const portalResponse = await page.goto(baseUrl + path, { waitUntil: "domcontentloaded" });
