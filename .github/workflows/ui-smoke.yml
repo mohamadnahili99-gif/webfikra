@@ -1,0 +1,61 @@
+name: WEBFIKRA browser preview checks
+
+on:
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  browser:
+    name: Desktop and mobile UI smoke test
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+
+      - name: Install project
+        run: npm ci
+
+      - name: Build production website
+        run: npm run build
+        env:
+          NEXT_TELEMETRY_DISABLED: "1"
+
+      - name: Install Chromium browser tooling
+        run: |
+          npm install --no-save --package-lock=false playwright@1.56.1
+          npx playwright install --with-deps chromium
+
+      - name: Start production web server
+        run: |
+          npm run start -- -p 3000 > /tmp/webfikra-next.log 2>&1 &
+          for count in $(seq 1 60); do
+            if curl --fail --silent http://127.0.0.1:3000 > /dev/null; then
+              exit 0
+            fi
+            sleep 2
+          done
+          cat /tmp/webfikra-next.log
+          exit 1
+
+      - name: Run browser smoke tests
+        run: node scripts/ui-smoke.mjs
+
+      - name: Upload screenshots for visual review
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: webfikra-browser-screenshots
+          path: screenshots/
+          if-no-files-found: ignore
+          retention-days: 7
