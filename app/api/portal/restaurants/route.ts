@@ -4,13 +4,15 @@ import {
   type Restaurant,
 } from "@/lib/platform";
 
-const columns = "id,owner_id,slug,name,description,whatsapp,address,hours,instagram,tiktok,logo_url,cover_url,accent_color,currency,published";
+const columns = "id,owner_id,slug,name,name_en,description,description_en,whatsapp,address,hours,instagram,tiktok,logo_url,cover_url,accent_color,currency,published";
 
 function parseRestaurant(input: Record<string, unknown>) {
   const slug = cleanText(input.slug, 40).toLowerCase();
   const name = cleanText(input.name, 100);
+  const name_en = cleanText(input.name_en, 100);
   const whatsapp = cleanText(input.whatsapp, 15).replace(/\D/g, "");
   const description = cleanText(input.description, 1200);
+  const description_en = cleanText(input.description_en, 1200);
   const address = cleanText(input.address, 300);
   const hours = cleanText(input.hours, 300);
   const instagram = cleanText(input.instagram, 250);
@@ -27,7 +29,7 @@ function parseRestaurant(input: Record<string, unknown>) {
   if (!validSocial(instagram) || !validSocial(tiktok)) return { error: "رابط إنستغرام أو تيك توك غير صالح" };
   if (!/^#[0-9a-fA-F]{6}$/.test(accent_color)) return { error: "رمز اللون غير صالح" };
   if (currency !== "USD" && currency !== "LBP") return { error: "العملة غير مدعومة" };
-  return { values: { slug, name, whatsapp, description, address, hours, instagram, tiktok, logo_url, cover_url, accent_color, currency, published } };
+  return { values: { slug, name, name_en, whatsapp, description, description_en, address, hours, instagram, tiktok, logo_url, cover_url, accent_color, currency, published } };
 }
 
 export async function GET() {
