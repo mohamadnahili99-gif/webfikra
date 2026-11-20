@@ -3,7 +3,9 @@
 import { useState } from "react";
 
 type Props = { arabic: boolean };
-type ThemeId = "ember" | "olive" | "sand";
+type ThemeId = "ember" | "olive" | "sand" | "navy" | "onyx" | "wine" | "emerald" | "violet" | "ocean" | "terracotta" | "mint" | "coral";
+type LayoutId = "modern" | "minimal" | "editorial";
+type Corners = "rounded" | "soft" | "square";
 type BusinessId = "restaurant" | "cafe" | "bakery";
 type Viewport = "phone" | "desktop";
 
@@ -11,6 +13,15 @@ const themes: Record<ThemeId, { ar: string; en: string; background: string; pane
   ember: { ar: "فحمي وبرتقالي", en: "Ember", background: "#1c1511", panel: "#32251d", accent: "#f3a165", text: "#fff7ed", muted: "#dbc3b1", actionText: "#23160d" },
   olive: { ar: "زيتي وذهبي", en: "Olive", background: "#20271c", panel: "#364333", accent: "#ebcc8a", text: "#f6f3e8", muted: "#c7d0bd", actionText: "#1a2318" },
   sand: { ar: "عاجي وبني", en: "Sand", background: "#f4ede2", panel: "#fffaf4", accent: "#75482f", text: "#302219", muted: "#7d6757", actionText: "#fffaf4" },
+  navy: { ar: "كحلي ونحاسي", en: "Navy & Copper", background: "#111e30", panel: "#20334a", accent: "#e4a67c", text: "#f7f5f1", muted: "#b9c4d3", actionText: "#172335" },
+  onyx: { ar: "أسود وذهبي", en: "Black & Gold", background: "#101012", panel: "#252427", accent: "#e9c979", text: "#f7f2e5", muted: "#bbb4a6", actionText: "#171310" },
+  wine: { ar: "خمري وكريمي", en: "Burgundy", background: "#371722", panel: "#542631", accent: "#f4d5a0", text: "#fff7ed", muted: "#e0c0c4", actionText: "#371722" },
+  emerald: { ar: "زمردي وذهبي", en: "Emerald", background: "#103d33", panel: "#245448", accent: "#edc77f", text: "#f6f7ed", muted: "#c1d6cc", actionText: "#17362b" },
+  violet: { ar: "بنفسجي فاخر", en: "Royal Violet", background: "#251b40", panel: "#42315e", accent: "#d9b5fc", text: "#faf4ff", muted: "#cbbfe2", actionText: "#251b40" },
+  ocean: { ar: "أزرق بحري", en: "Ocean Blue", background: "#103d56", panel: "#235770", accent: "#a8e6ee", text: "#effaff", muted: "#c6e1ed", actionText: "#113746" },
+  terracotta: { ar: "طيني وكريمي", en: "Terracotta", background: "#f7eee6", panel: "#ebd6c8", accent: "#ad5c42", text: "#432d25", muted: "#856d63", actionText: "#fffaf3" },
+  mint: { ar: "نعناعي هادئ", en: "Soft Mint", background: "#e8f4ed", panel: "#d2e5d8", accent: "#28775e", text: "#173b30", muted: "#607b6c", actionText: "#ffffff" },
+  coral: { ar: "مرجاني دافئ", en: "Warm Coral", background: "#321e25", panel: "#53313c", accent: "#ff998a", text: "#fff4f0", muted: "#d6b8c3", actionText: "#321e25" },
 };
 
 const businesses: Record<BusinessId, { ar: string; en: string; headingAr: string; headingEn: string; subtitleAr: string; subtitleEn: string; image: string; dishes: { emoji: string; ar: string; en: string }[] }> = {
@@ -39,8 +50,19 @@ export default function BrandStudioPreview({ arabic }: Props) {
   const [businessId, setBusinessId] = useState<BusinessId>("restaurant");
   const [themeId, setThemeId] = useState<ThemeId>("ember");
   const [viewport, setViewport] = useState<Viewport>("desktop");
+  const [customAccent, setCustomAccent] = useState("#f3a165");
+  const [useCustomAccent, setUseCustomAccent] = useState(false);
+  const [layoutId, setLayoutId] = useState<LayoutId>("modern");
+  const [corners, setCorners] = useState<Corners>("rounded");
 
-  const theme = themes[themeId];
+  const originalTheme = themes[themeId];
+  // Use readable foreground text on either light or dark custom button colors.
+  const colorValue = useCustomAccent ? customAccent : originalTheme.accent;
+  const rgb = [1, 3, 5].map((start) => parseInt(colorValue.slice(start, start + 2), 16) / 255);
+  const luminance = rgb.map((c) => c <= 0.04045 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4));
+  const brightness = luminance[0] * 0.2126 + luminance[1] * 0.7152 + luminance[2] * 0.0722;
+  const theme = { ...originalTheme, accent: colorValue, actionText: useCustomAccent ? (brightness > 0.18 ? "#171310" : "#ffffff") : originalTheme.actionText };
+  const radius = corners === "square" ? "4px" : corners === "soft" ? "12px" : "26px";
   const business = businesses[businessId];
   const displayName = name.trim() || (arabic ? "اسم مطعمك هنا" : "YOUR BRAND");
   const t = (ar: string, en: string) => arabic ? ar : en;
@@ -51,6 +73,9 @@ export default function BrandStudioPreview({ arabic }: Props) {
       t("اسم النشاط: ", "Business name: ") + displayName,
       t("نوع النشاط: ", "Business type: ") + t(business.ar, business.en),
       t("الأسلوب اللوني: ", "Color direction: ") + t(theme.ar, theme.en),
+      t("لون التمييز: ", "Accent color: ") + colorValue,
+      t("شكل التصميم: ", "Layout: ") + (layoutId === "modern" ? t("عصري", "Modern") : layoutId === "minimal" ? t("بسيط", "Minimal") : t("تحريري", "Editorial")),
+      t("شكل الزوايا: ", "Corner style: ") + (corners === "rounded" ? t("دائري", "Rounded") : corners === "soft" ? t("ناعم", "Soft") : t("مستقيم", "Square")),
       t("العرض المفضل: ", "Preferred preview: ") + t(viewport === "phone" ? "هاتف" : "كمبيوتر", viewport === "phone" ? "Mobile" : "Desktop"),
       t("هذا طلب استفسار، وليس طلباً لإنشاء موقع تلقائياً.", "This is an inquiry, not an automatic website creation request."),
     ].join("\n");
@@ -70,8 +95,8 @@ export default function BrandStudioPreview({ arabic }: Props) {
           </div>
           <p className="max-w-lg text-sm leading-8 text-white/60 md:text-base">
             {t(
-              "اختر نشاطك وألوانك، وأدخل اسمه لتشاهد تصوراً فورياً لشكل واجهته. التغيير هنا للعرض فقط، ولا ينشئ موقعاً حقيقياً أو يحفظ بياناتك.",
-              "Choose your business, colors, and name to instantly preview a visual direction. This demonstration doesn't create a real website or save your data.",
+              "اختر نشاطك من بين 12 هوية لونية، وحدّد لوناً خاصاً وشكل الواجهة والزوايا. شاهد النتيجة مباشرة دون إنشاء موقع أو حفظ بياناتك.",
+              "Explore 12 curated palettes, choose your own accent, and adjust the layout and corners. This live preview doesn't create a website or save your data.",
             )}
           </p>
         </div>
@@ -106,16 +131,61 @@ export default function BrandStudioPreview({ arabic }: Props) {
 
             <fieldset className="mt-8">
               <legend className="mb-3 text-sm font-bold text-white/85">{t("ألوان الهوية", "Color palette")}</legend>
-              <div className="space-y-2">
+              <div className="grid grid-cols-2 gap-2">
                 {(Object.keys(themes) as ThemeId[]).map((id) => (
-                  <button type="button" key={id} aria-pressed={themeId === id} onClick={() => setThemeId(id)}
-                    className={themeId === id ? "flex w-full items-center justify-between gap-3 rounded-xl border border-[#e9a473] bg-white/[.08] px-4 py-3 text-sm font-bold" : "flex w-full items-center justify-between gap-3 rounded-xl border border-white/10 bg-white/[.025] px-4 py-3 text-sm text-white/75 hover:border-white/35"}>
+                  <button type="button" key={id} aria-pressed={themeId === id && !useCustomAccent} onClick={() => { setThemeId(id); setUseCustomAccent(false); }}
+                    className={themeId === id && !useCustomAccent ? "flex min-h-20 w-full flex-col items-start justify-between gap-2 rounded-xl border border-[#e9a473] bg-white/[.08] px-3 py-3 text-start text-xs font-bold" : "flex min-h-20 w-full flex-col items-start justify-between gap-2 rounded-xl border border-white/10 bg-white/[.025] px-3 py-3 text-start text-xs text-white/75 hover:border-white/35"}>
                     <span>{t(themes[id].ar, themes[id].en)}</span>
                     <span className="flex gap-1" aria-hidden="true">
                       <span className="h-5 w-5 rounded-full border border-white/20" style={{background: themes[id].background}} />
                       <span className="h-5 w-5 rounded-full border border-white/20" style={{background: themes[id].accent}} />
                       <span className="h-5 w-5 rounded-full border border-white/20" style={{background: themes[id].panel}} />
                     </span>
+                  </button>
+                ))}
+              </div>
+            </fieldset>
+
+            <div className="mt-6 rounded-2xl border border-white/10 bg-black/15 p-4">
+              <label htmlFor="preview-accent-color" className="flex items-center justify-between gap-3 text-sm font-bold text-white/85">
+                <span>{t("لون إضافي من اختيارك", "Your own accent color")}</span>
+                <bdi dir="ltr" className="text-xs font-medium text-white/55">{colorValue.toUpperCase()}</bdi>
+              </label>
+              <div className="mt-3 flex items-center gap-3">
+                <input id="preview-accent-color" type="color" value={colorValue}
+                  onChange={(event) => { setCustomAccent(event.target.value); setUseCustomAccent(true); }}
+                  className="h-11 w-16 cursor-pointer rounded-lg border border-white/20 bg-transparent p-1" />
+                <span className="text-xs leading-5 text-white/55">{t("اضغط لاختيار أي لون يناسب علامتك.", "Pick any color for your brand accents.")}</span>
+              </div>
+            </div>
+
+            <fieldset className="mt-8">
+              <legend className="mb-3 text-sm font-bold text-white/85">{t("طريقة ترتيب المحتوى", "Layout style")}</legend>
+              <div className="grid grid-cols-3 gap-2">
+                {([
+                  ["modern", "عصري", "Modern"],
+                  ["minimal", "بسيط", "Minimal"],
+                  ["editorial", "تحريري", "Editorial"],
+                ] as const).map(([id, ar, en]) => (
+                  <button type="button" key={id} aria-pressed={layoutId === id} onClick={() => setLayoutId(id)}
+                    className={layoutId === id ? "rounded-xl border border-[#e9a473] bg-[#e9a473]/15 px-2 py-3 text-xs font-black text-[#ffc69c]" : "rounded-xl border border-white/10 bg-white/[.035] px-2 py-3 text-xs text-white/70 hover:border-white/35"}>
+                    {t(ar,en)}
+                  </button>
+                ))}
+              </div>
+            </fieldset>
+
+            <fieldset className="mt-7">
+              <legend className="mb-3 text-sm font-bold text-white/85">{t("شكل الزوايا والأزرار", "Corners & buttons")}</legend>
+              <div className="grid grid-cols-3 gap-2">
+                {([
+                  ["rounded", "دائري", "Rounded"],
+                  ["soft", "ناعم", "Soft"],
+                  ["square", "مستقيم", "Square"],
+                ] as const).map(([id, ar, en]) => (
+                  <button type="button" key={id} aria-pressed={corners === id} onClick={() => setCorners(id)}
+                    className={corners === id ? "rounded-xl border border-[#e9a473] bg-[#e9a473]/15 px-2 py-3 text-xs font-black text-[#ffc69c]" : "rounded-xl border border-white/10 bg-white/[.035] px-2 py-3 text-xs text-white/70 hover:border-white/35"}>
+                    {t(ar,en)}
                   </button>
                 ))}
               </div>
@@ -145,17 +215,17 @@ export default function BrandStudioPreview({ arabic }: Props) {
               </div>
             </div>
             <div className="flex min-h-[570px] items-center justify-center rounded-[22px] bg-[#191512] p-2 sm:p-5">
-              <div style={{maxWidth: viewport === "phone" ? 355 : 860, background: theme.background, color: theme.text}} className="w-full overflow-hidden rounded-[20px] border border-white/15 shadow-[0_22px_70px_rgba(0,0,0,.35)] transition-[max-width] duration-300">
+              <div className="w-full overflow-hidden border border-white/15 shadow-[0_22px_70px_rgba(0,0,0,.35)] transition-[max-width,border-radius] duration-300" style={{ maxWidth: viewport === "phone" ? 355 : 860, background: theme.background, color: theme.text, borderRadius: radius }}>
                 <div className="flex items-center justify-between gap-3 border-b px-5 py-4" style={{ borderColor: theme.accent + "35" }}>
                   <div className="min-w-0 truncate text-sm font-black">{displayName}</div>
                   <span className="shrink-0 text-[10px] font-bold" style={{color: theme.accent}}>MENU • {t("اطلب الآن", "ORDER")}</span>
                 </div>
-                <div className="relative min-h-[240px] bg-cover bg-center px-5 py-12 sm:px-8" style={{backgroundImage:"linear-gradient(90deg,rgba(13,10,8,.86),rgba(13,10,8,.26)),url(" + business.image + ")"}}>
-                  <div className="relative max-w-sm">
+                <div className={layoutId === "minimal" ? "relative min-h-[195px] bg-cover bg-center px-5 py-9 sm:px-8" : layoutId === "editorial" ? "relative min-h-[310px] bg-cover bg-center px-5 py-16 sm:px-8" : "relative min-h-[240px] bg-cover bg-center px-5 py-12 sm:px-8"} style={{backgroundImage:"linear-gradient(90deg,rgba(13,10,8,.86),rgba(13,10,8,.26)),url(" + business.image + ")"}}>
+                  <div className={layoutId === "editorial" ? "relative mx-auto max-w-sm text-center" : layoutId === "minimal" ? "relative max-w-sm" : "relative max-w-sm"}>
                     <p className="text-[10px] font-black tracking-[.24em] text-[#ffdebb]">YOUR STORY / YOUR BRAND</p>
-                    <h3 className="mt-4 text-3xl font-black leading-tight text-white sm:text-4xl">{t(business.headingAr, business.headingEn)}</h3>
+                    <h3 className={layoutId === "minimal" ? "mt-4 text-2xl font-black leading-tight text-white sm:text-3xl" : layoutId === "editorial" ? "mt-4 text-4xl font-black leading-tight text-white sm:text-5xl" : "mt-4 text-3xl font-black leading-tight text-white sm:text-4xl"}>{t(business.headingAr, business.headingEn)}</h3>
                     <p className="mt-3 text-xs leading-6 text-white/80">{t(business.subtitleAr, business.subtitleEn)}</p>
-                    <span className="mt-6 inline-block rounded-full px-5 py-2.5 text-xs font-black" style={{background:theme.accent,color:theme.actionText}}>
+                    <span className="mt-6 inline-block px-5 py-2.5 text-xs font-black" style={{background:theme.accent,color:theme.actionText,borderRadius:radius}}>
                       {t("اكتشف القائمة", "Explore menu")}
                     </span>
                   </div>
@@ -167,7 +237,7 @@ export default function BrandStudioPreview({ arabic }: Props) {
                   </div>
                   <div className={viewport === "phone" ? "grid gap-3" : "grid grid-cols-1 gap-3 md:grid-cols-3"}>
                     {business.dishes.map((dish) => (
-                      <div key={dish.en} className="flex items-center gap-3 rounded-2xl p-3" style={{background:theme.panel}}>
+                      <div key={dish.en} className="flex items-center gap-3 p-3" style={{background:theme.panel,borderRadius:radius}}>
                         <span aria-hidden="true" className="text-3xl">{dish.emoji}</span>
                         <span className="text-xs font-bold">{t(dish.ar,dish.en)}</span>
                       </div>
