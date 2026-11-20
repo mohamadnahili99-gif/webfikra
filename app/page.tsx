@@ -3,6 +3,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import RestaurantExperience from "./components/RestaurantExperience";
 
 export default function Home() {
   const [arabic, setArabic] = useState(true);
@@ -176,6 +177,9 @@ export default function Home() {
           <a className="transition hover:text-[#ffad75]" href="#services">
             {arabic ? "خدماتنا" : "Services"}
           </a>
+          <a className="transition hover:text-[#ffad75]" href="#experience">
+            {arabic ? "جرّب المنيو" : "Try the Demo"}
+          </a>
           <a className="transition hover:text-[#ffad75]" href="#portfolio">
             {arabic ? "أعمالنا" : "Our Work"}
           </a>
@@ -221,21 +225,21 @@ export default function Home() {
             <h1 className="mb-7 text-5xl font-black leading-[1.3] tracking-tight md:text-7xl">
               {arabic ? (
                 <>
-                  مطعمك يستحق واجهة{" "}
-                  <span className="orange-text">تفتح الشهية!</span>
+                  موقع مطعمك{" "}
+                  <span className="orange-text">يُبهر زبائنك ويُسهّل طلباتهم.</span>
                 </>
               ) : (
                 <>
-                  Your Restaurant Deserves an{" "}
-                  <span className="orange-text">Appetizing Website!</span>
+                  A Restaurant Website{" "}
+                  <span className="orange-text">Worth Coming Back To.</span>
                 </>
               )}
             </h1>
 
             <p className="mb-10 max-w-xl text-lg leading-9 text-white/60">
               {arabic
-                ? "نصمم لك موقعاً إلكترونياً أنيقاً يعرض منيو مطعمك ويسهّل على زبائنك الطلب."
-                : "We design elegant websites that showcase your restaurant menu and make ordering easier for your customers."}
+                ? "نحوّل هوية مطعمك إلى تجربة رقمية أنيقة: قائمة واضحة، صور شهية، وسلة طلبات سهلة تضع مطعمك على بُعد لمسة من زبائنه."
+                : "We turn your restaurant’s identity into an elegant digital experience, with a beautiful menu, irresistible visuals, and a simple ordering journey."}
             </p>
 
             <div className="flex flex-wrap gap-4">
@@ -247,19 +251,19 @@ export default function Home() {
               </Link>
 
               <a
-                href="#portfolio"
+                href="#experience"
                 className="rounded-full border border-white/20 bg-white/5 px-9 py-4 font-bold text-white transition hover:border-[#f47b35]/60 hover:bg-white/10"
               >
-                {arabic ? "شاهد أعمالنا" : "See Our Work"}
+                {arabic ? "جرّب المنيو" : "Try the Demo"}
               </a>
             </div>
 
             <div className="mt-12 flex flex-wrap gap-8 text-sm text-white/50">
               <div>
                 <span className="mb-1 block text-xl font-black text-[#ffad75]">
-                  3D
+                  01
                 </span>
-                {arabic ? "تصميم عصري" : "Modern Design"}
+                {arabic ? "تصميم مخصص" : "Custom Design"}
               </div>
               <div>
                 <span className="mb-1 block text-xl font-black text-[#ffad75]">
@@ -349,6 +353,57 @@ export default function Home() {
 
                 <div className="mt-7 h-1 w-12 rounded-full bg-gradient-to-r from-[#f47b35] to-[#ffc078]" />
               </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+
+      {/* Interactive menu preview */}
+      <RestaurantExperience arabic={arabic} />
+
+      {/* How it works */}
+      <section id="how-it-works" className="relative z-10 px-6 py-24 md:py-28">
+        <div className="mx-auto max-w-7xl">
+          <div className="mb-12 max-w-3xl">
+            <p className="mb-4 text-xs font-black uppercase tracking-[.25em] text-[#f49a60]">{arabic ? "رحلتك معنا" : "HOW IT WORKS"}</p>
+            <h2 className="text-4xl font-black leading-tight md:text-5xl">{arabic ? "من أول فكرة، إلى موقع يعكس شخصية مطعمك." : "From your first idea to a website that's truly yours."}</h2>
+            <p className="mt-5 leading-8 text-white/55">{arabic ? "نُبقي العمل واضحاً وبسيطاً، ونصمم تفاصيل تناسب نشاطك بدلاً من تقديم قالب واحد للجميع." : "A simple, transparent process with details tailored to your business — not a one-size-fits-all template."}</p>
+          </div>
+          <div className="grid gap-5 md:grid-cols-3">
+            {[
+              { num: "01", ar: "نتعرف على مطعمك", en: "Tell us your story", da: "تخبرنا عن نشاطك وهويتك وأصنافك وما ترغب أن يراه زبائنك.", de: "Share your brand, menu, and the experience you want guests to have." },
+              { num: "02", ar: "نصمم تجربتك", en: "We craft the experience", da: "نرتب الأقسام والصور والتفاصيل ونصمم واجهة مريحة لكل شاشة.", de: "We design the layout, imagery, and interactions for every screen." },
+              { num: "03", ar: "نراجع ونطلق", en: "Review and launch", da: "نجرب الموقع معك، ننفذ التعديلات المتفق عليها، ثم نجهزه للنشر.", de: "We review the site together, refine it, and prepare it for launch." },
+            ].map((step) => (
+              <article key={step.num} className="relative overflow-hidden rounded-[28px] border border-white/10 bg-[#211b16] p-8">
+                <span className="text-6xl font-black text-[#ee934e]/25">{step.num}</span>
+                <h3 className="mt-5 text-xl font-black">{arabic ? step.ar : step.en}</h3>
+                <p className="mt-4 text-sm leading-8 text-white/55">{arabic ? step.da : step.de}</p>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Frequently asked questions */}
+      <section id="faq" className="relative z-10 border-y border-white/10 bg-[#19140f] px-6 py-24">
+        <div className="mx-auto max-w-4xl">
+          <p className="mb-4 text-center text-xs font-black uppercase tracking-[.25em] text-[#f49a60]">{arabic ? "لديك سؤال؟" : "COMMON QUESTIONS"}</p>
+          <h2 className="mb-12 text-center text-4xl font-black md:text-5xl">{arabic ? "كل شيء يبدأ بإجابة واضحة." : "Good questions deserve clear answers."}</h2>
+          <div className="space-y-4">
+            {[
+              { qAr: "هل يمكن تصميم الموقع بهوية مطعمي؟", qEn: "Can the site match my restaurant's brand?", aAr: "نعم، نصمم الألوان والخطوط والمحتوى بما يتناسب مع هوية نشاطك وبحسب المتطلبات المتفق عليها.", aEn: "Yes. We tailor colors, type, and content to your restaurant and the agreed project scope." },
+              { qAr: "هل يعمل الموقع على الهاتف؟", qEn: "Will the website work on mobile?", aAr: "نعم، نضع تجربة الهاتف في صميم التصميم، ونختبر الواجهات بأحجام شاشات مختلفة.", aEn: "Yes. We design mobile-first and review layouts across different screen sizes." },
+              { qAr: "هل يمكن إضافة منيو وسلة طلبات؟", qEn: "Can I have a menu and ordering cart?", aAr: "يمكننا تجهيز منيو رقمي مع سلة طلبات وربط إرسال الطلب بواتساب ضمن نطاق المشروع.", aEn: "We can build a digital menu with a cart and WhatsApp order handoff within your project scope." },
+              { qAr: "كيف أحصل على السعر والمدة؟", qEn: "How do I get a quote and timeline?", aAr: "أرسل لنا تفاصيل المطعم والصفحات والميزات المطلوبة، وسنناقش معك العرض المناسب قبل البدء.", aEn: "Tell us about your restaurant, pages, and required features so we can discuss a tailored quote and timeline." },
+            ].map((faq) => (
+              <details key={faq.qEn} className="group rounded-2xl border border-white/10 bg-white/[0.035] p-6 open:border-[#ef934c]/40">
+                <summary className="flex cursor-pointer list-none items-center justify-between gap-5 font-bold [&::-webkit-details-marker]:hidden">
+                  <span>{arabic ? faq.qAr : faq.qEn}</span><span className="text-2xl text-[#f49a60] transition group-open:rotate-45">+</span>
+                </summary>
+                <p className="mt-5 max-w-3xl text-sm leading-8 text-white/60">{arabic ? faq.aAr : faq.aEn}</p>
+              </details>
             ))}
           </div>
         </div>
