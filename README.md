@@ -6,7 +6,8 @@ Modern bilingual digital experiences for restaurants, cafés, and bakeries.
 
 - Next.js App Router website, TypeScript, React, and Tailwind CSS
 - Premium Arabic/English marketing landing page
-- Interactive sample menu with categories, cart, quantity controls, and a sample total
+- Interactive sample menu with categories, cart, quantity controls, example order message, and a sample total (no delivery fees or order submission)
+- Live brand-style studio: business name, restaurant/café/bakery selection, three color palettes, and desktop/mobile concept previews
 - Project inquiry form that prepares (but **does not send**) a WhatsApp message
 - Illustrative creative concepts, service descriptions, and FAQs
 - Existing `/order`, `/restaurants/login`, and `/restaurants/register` routes
@@ -32,14 +33,15 @@ npx tsc --noEmit
 npm run build
 ```
 
-GitHub Actions also runs these checks on pull requests targeting `main` and on pushes to the redesign branch.
+GitHub Actions also runs these checks on pull requests targeting `main` and on pushes to the redesign branch. A separate browser workflow tests the live marketing page in Chromium on desktop and mobile; screenshots are uploaded to the workflow as review artifacts.
 
 ## Main files
 
 | Path | Purpose |
 | --- | --- |
 | `app/page.tsx` | Main bilingual marketing page |
-| `app/components/RestaurantExperience.tsx` | Interactive sample menu |
+| `app/components/RestaurantExperience.tsx` | Interactive sample menu and cart message preview |
+| `app/components/BrandStudioPreview.tsx` | Interactive brand-style concept studio |
 | `app/components/LeadQuoteForm.tsx` | WhatsApp project inquiry builder |
 | `app/hooks/useWebfikraLanguage.ts` | Shared language preference |
 | `app/globals.css` | Brand typography and motion |
@@ -54,7 +56,8 @@ GitHub Actions also runs these checks on pull requests targeting `main` and on p
 - Demo product details and prices are **illustrative**, not real client catalog data.
 - Marketing imagery currently uses third-party Unsplash image URLs; replace these with appropriately licensed first-party assets before a final production release if desired.
 - The existing `public/webfikra-hero.mp4` is used by the home hero when available; a food-photo poster is included for fallback display.
-- The WhatsApp phone number is set in `app/components/LeadQuoteForm.tsx`, while contact links on the homepage are in `app/page.tsx`.
+- The WhatsApp phone number is set in `app/components/LeadQuoteForm.tsx` and in `app/components/BrandStudioPreview.tsx`, while contact links on the homepage are in `app/page.tsx`.
+- If a custom domain is connected later, set `NEXT_PUBLIC_SITE_URL` to its full HTTPS origin, e.g. `https://your-domain.example`. In Vercel, the app otherwise uses the current deployment URL for social previews.
 
 ## Deployment workflow
 
