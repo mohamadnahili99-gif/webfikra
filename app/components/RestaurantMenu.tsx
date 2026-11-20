@@ -14,6 +14,9 @@ export default function RestaurantMenu({ menu }: { menu: PublishedMenu }) {
   const [notes, setNotes] = useState("");
   const arabic = language === "ar";
   const t = (ar: string, en: string) => arabic ? ar : en;
+  const restaurantName = !arabic && restaurant.name_en ? restaurant.name_en : restaurant.name;
+  const itemName = (i: { name: string; name_en: string }) => !arabic && i.name_en ? i.name_en : i.name;
+  const itemDetails = (i: { description: string; description_en: string }) => !arabic && i.description_en ? i.description_en : i.description;
   const accent = /^#[0-9a-fA-F]{6}$/.test(restaurant.accent_color) ? restaurant.accent_color : "#EF9754";
 
   const selectedItems = items.filter((item) => (cart[item.id] || 0) > 0);
@@ -34,9 +37,9 @@ export default function RestaurantMenu({ menu }: { menu: PublishedMenu }) {
     event.preventDefault();
     if (!count || !customer.trim() || !address.trim()) return;
     const lines = [
-      arabic ? "طلب جديد من: " + restaurant.name : "New order from " + restaurant.name,
+      arabic ? "طلب جديد من: " + restaurantName : "New order from " + restaurantName,
       ...selectedItems.map((item, index) =>
-        (index + 1) + ". " + item.name + " × " + cart[item.id] + " — " + money(Number(item.price) * cart[item.id])),
+        (index + 1) + ". " + itemName(item) + " × " + cart[item.id] + " — " + money(Number(item.price) * cart[item.id])),
       arabic ? "المجموع: " + money(total) : "Total: " + money(total),
       arabic ? "الاسم: " + customer.trim() : "Name: " + customer.trim(),
       arabic ? "العنوان: " + address.trim() : "Address: " + address.trim(),
@@ -53,8 +56,8 @@ export default function RestaurantMenu({ menu }: { menu: PublishedMenu }) {
       <header className="sticky top-0 z-40 border-b border-[#e3d9ca] bg-white/95 backdrop-blur-xl">
         <div className="mx-auto flex max-w-6xl items-center justify-between gap-3 px-4 py-3 sm:px-6">
           <div className="flex min-w-0 items-center gap-3">
-            {logoImage ? <span role="img" aria-label={restaurant.name} className="h-11 w-11 shrink-0 rounded-xl bg-cover bg-center" style={{backgroundImage:"url(" + JSON.stringify(logoImage) + ")"}} /> : <span aria-hidden="true" className="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-[#251a13] text-xl text-white">🍽</span>}
-            <div className="min-w-0"><p className="truncate text-base font-black">{restaurant.name}</p><p className="text-[11px] text-[#8b7969]">{t("قائمتنا الرقمية", "Our Digital Menu")}</p></div>
+            {logoImage ? <span role="img" aria-label={restaurantName} className="h-11 w-11 shrink-0 rounded-xl bg-cover bg-center" style={{backgroundImage:"url(" + JSON.stringify(logoImage) + ")"}} /> : <span aria-hidden="true" className="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-[#251a13] text-xl text-white">🍽</span>}
+            <div className="min-w-0"><p className="truncate text-base font-black">{restaurantName}</p><p className="text-[11px] text-[#8b7969]">{t("قائمتنا الرقمية", "Our Digital Menu")}</p></div>
           </div>
           <div className="flex shrink-0 gap-2">
             <button type="button" onClick={() => setLanguage(arabic ? "en" : "ar")} className="rounded-full border border-[#e2d5c5] px-4 py-2.5 text-xs font-black">{arabic ? "EN" : "عربي"}</button>
@@ -68,8 +71,8 @@ export default function RestaurantMenu({ menu }: { menu: PublishedMenu }) {
         <div aria-hidden="true" className="absolute inset-0 -z-10 bg-gradient-to-l from-black/50 to-black/15" />
         <div className="relative mx-auto max-w-6xl">
           <p className="mb-3 text-sm font-bold" style={{color:accent}}>{t("أهلاً وسهلاً بك", "WELCOME")}</p>
-          <h1 className="max-w-3xl text-4xl font-black leading-tight sm:text-6xl">{restaurant.name}</h1>
-          <p className="mt-4 max-w-2xl text-base leading-8 text-white/85">{restaurant.description || t("اختَر ما تحب من قائمتنا", "Discover something delicious today")}</p>
+          <h1 className="max-w-3xl text-4xl font-black leading-tight sm:text-6xl">{restaurantName}</h1>
+          <p className="mt-4 max-w-2xl text-base leading-8 text-white/85">{(!arabic && restaurant.description_en ? restaurant.description_en : restaurant.description) || t("اختَر ما تحب من قائمتنا", "Discover something delicious today")}</p>
           <div className="mt-6 flex flex-wrap gap-3 text-xs text-white/80">
             {restaurant.address && <span>📍 {restaurant.address}</span>}
             {restaurant.hours && <span>◷ {restaurant.hours}</span>}
@@ -83,22 +86,22 @@ export default function RestaurantMenu({ menu }: { menu: PublishedMenu }) {
             <button type="button" key={category.id} onClick={() => setActiveCategory(category.id)} aria-pressed={category.id === activeCategory}
               className="rounded-full border px-5 py-2.5 text-sm font-bold transition hover:-translate-y-0.5"
               style={category.id === activeCategory ? {backgroundColor:accent,color:"white",borderColor:accent} : {backgroundColor:"white",borderColor:"#dfd3c4"}}>
-              {category.name}
+              {itemName(category)}
             </button>)}
         </nav>
         {categories.length === 0 ? <p className="mt-12 rounded-2xl bg-white p-8 text-center text-[#8d7463]">{t("لا توجد أقسام منشورة بعد", "No menu categories published yet")}</p> : (
           <>
-            <h2 className="mb-6 mt-10 text-3xl font-black">{categories.find((c)=>c.id===activeCategory)?.name}</h2>
+            <h2 className="mb-6 mt-10 text-3xl font-black">{itemName(categories.find((c)=>c.id===activeCategory) || {name:"",name_en:""})}</h2>
             <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
               {shownItems.map((item)=>(
                 <article key={item.id} className="overflow-hidden rounded-[25px] border border-[#e4d7c9] bg-white shadow-[0_8px_24px_rgba(47,28,14,.045)]">
-                  {item.image_url.startsWith("https://") ? <div role="img" aria-label={item.name} className="h-48 bg-[#e9ded2] bg-cover bg-center" style={{backgroundImage:"url(" + JSON.stringify(item.image_url) + ")"}}/> : <div className="grid h-40 place-items-center bg-[#ede3d8] text-5xl" aria-hidden="true">🍽️</div>}
+                  {item.image_url.startsWith("https://") ? <div role="img" aria-label={itemName(item)} className="h-48 bg-[#e9ded2] bg-cover bg-center" style={{backgroundImage:"url(" + JSON.stringify(item.image_url) + ")"}}/> : <div className="grid h-40 place-items-center bg-[#ede3d8] text-5xl" aria-hidden="true">🍽️</div>}
                   <div className="p-5">
                     <div className="flex items-start justify-between gap-3">
-                      <h3 className="text-lg font-black">{item.name}</h3>
+                      <h3 className="text-lg font-black">{itemName(item)}</h3>
                       <span className="shrink-0 font-black" style={{color:accent}}>{money(Number(item.price))}</span>
                     </div>
-                    {item.description && <p className="mt-2 min-h-[43px] text-sm leading-6 text-[#8b7668]">{item.description}</p>}
+                    {itemDetails(item) && <p className="mt-2 min-h-[43px] text-sm leading-6 text-[#8b7668]">{itemDetails(item)}</p>}
                     <div className="mt-6 flex items-center justify-between gap-3">
                       <button type="button" className="rounded-full px-5 py-2.5 text-sm font-black text-white" style={{backgroundColor:accent}} onClick={() => changeQuantity(item.id,1)}>{t("إضافة +", "Add +")}</button>
                       <div className="flex items-center gap-3">
@@ -131,7 +134,7 @@ export default function RestaurantMenu({ menu }: { menu: PublishedMenu }) {
                 <div className="my-6 space-y-3 border-y border-[#e9dfd5] py-5">
                   {selectedItems.map((item)=>(
                     <div key={item.id} className="flex items-center justify-between gap-4 text-sm">
-                      <span className="font-semibold">{item.name} × {cart[item.id]}</span>
+                      <span className="font-semibold">{itemName(item)} × {cart[item.id]}</span>
                       <span className="font-black">{money(Number(item.price)*cart[item.id])}</span>
                     </div>
                   ))}
