@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import RestaurantExperience from "./components/RestaurantExperience";
 import LeadQuoteForm from "./components/LeadQuoteForm";
 import BrandStudioPreview from "./components/BrandStudioPreview";
@@ -318,12 +319,11 @@ export default function Home() {
             <a className="hover:text-[#f0a065]" href="#services">{t("خدماتنا", "Services")}</a><a className="hover:text-[#f0a065]" href="#experience">{t("جرّب المنيو", "Live demo")}</a><a className="hover:text-[#f0a065]" href="#brand-studio">{t("جرّب تصميمك", "Design preview")}</a><a className="hover:text-[#f0a065]" href="#showcase">{t("نماذجنا", "Concepts")}</a><a className="hover:text-[#f0a065]" href="#packages">{t("حلولنا", "Solutions")}</a><a className="hover:text-[#f0a065]" href="#faq">{t("الأسئلة الشائعة", "FAQ")}</a><a className="hover:text-[#f0a065]" href="#contact">{t("اطلب موقعك", "Start a project")}</a>
           </div></div>
           <div><p className="mb-5 text-xs font-black tracking-widest text-[#e3a879]">{t("تواصل معنا", "GET IN TOUCH")}</p><div className="flex flex-col items-start gap-4 text-sm text-white/60">
-            <a className="hover:text-[#f0a065]" href="https://wa.me/96171524556" target="_blank" rel="noreferrer">WhatsApp: +961 71 524 556 ↗</a>
-            <a className="hover:text-[#f0a065]" href="https://instagram.com/webfikra" target="_blank" rel="noreferrer">Instagram: @webfikra ↗</a>
-            <a className="hover:text-[#f0a065]" href="mailto:webfikra@proton.me">webfikra@proton.me ↗</a>
+            <a className="hover:text-[#f0a065]" href="https://wa.me/96171524556" target="_blank" rel="noopener noreferrer">WhatsApp: +961 71 524 556 ↗</a>
+            <p className="text-xs leading-7 text-white/45">{t("نستقبل استفسارات تصميم المواقع عبر واتساب، ونجهّز عرضاً مخصصاً بعد مناقشة مشروعك.", "We discuss website inquiries over WhatsApp and prepare tailored quotes for your project.")}</p>
           </div></div>
         </div>
-        <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-4 pt-8 text-xs text-white/35"><span>© 2026 WEBFIKRA. {t("جميع الحقوق محفوظة.", "All rights reserved.")}</span><span>YOUR VISION, OUR DIGITAL CREATION.</span></div>
+        <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-4 pt-8 text-xs text-white/35"><span>© 2026 WEBFIKRA. {t("جميع الحقوق محفوظة.", "All rights reserved.")}</span><div className="flex flex-wrap gap-5"><Link className="hover:text-white" href="/privacy">{t("سياسة الخصوصية", "Privacy")}</Link><Link className="hover:text-white" href="/terms">{t("شروط الاستخدام", "Terms")}</Link></div><span>YOUR VISION, OUR DIGITAL CREATION.</span></div>
       </footer>
     </main>
   );
