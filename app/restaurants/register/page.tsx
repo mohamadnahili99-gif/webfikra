@@ -1,8 +1,10 @@
+import Link from "next/link";
+
 export default function RestaurantRegisterPage() {
   return (
     <main dir="rtl" className="min-h-screen bg-[#100e0c] px-5 py-12 text-white">
       <div className="mx-auto max-w-xl">
-        <a href="/" className="text-2xl font-black tracking-tight">WEB<span className="text-[#f47b35]">FIKRA</span></a>
+        <Link href="/" className="text-2xl font-black tracking-tight">WEB<span className="text-[#f47b35]">FIKRA</span></Link>
         <section className="mt-12 rounded-3xl border border-white/10 bg-white/[0.04] p-8 shadow-2xl">
           <p className="text-sm font-bold text-[#f49a60]">انضم إلى Webfikra</p>
           <h1 className="mt-3 text-3xl font-black">أنشئ حساب مطعمك</h1>
@@ -25,7 +27,7 @@ export default function RestaurantRegisterPage() {
             </label>
             <button type="button" disabled className="cursor-not-allowed rounded-xl bg-[#f47b35]/50 px-5 py-3 font-black text-white/70 sm:col-span-2">إنشاء الحساب قريباً</button>
           </form>
-          <p className="mt-6 text-center text-sm text-white/55">لديك حساب؟ <a href="/restaurants/login" className="font-bold text-[#ffad75] hover:text-white">دخول المطاعم</a></p>
+          <p className="mt-6 text-center text-sm text-white/55">لديك حساب؟ <Link href="/restaurants/login" className="font-bold text-[#ffad75] hover:text-white">دخول المطاعم</Link></p>
           <p className="mt-5 rounded-xl border border-[#f47b35]/20 bg-[#f47b35]/[0.07] p-3 text-xs leading-6 text-[#ffc08e]">هذه واجهة تسجيل أولية وليست نموذجاً يرسل بياناتك بعد. سنفعّل إنشاء الحساب بعد إعداد الحماية وقاعدة البيانات.</p>
         </section>
       </div>
