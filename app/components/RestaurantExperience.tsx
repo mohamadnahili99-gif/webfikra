@@ -25,6 +25,16 @@ const menu: MenuItem[] = [
   { id: "coffee", category: "drinks", ar: "قهوة مثلجة", en: "Iced Coffee", detailsAr: "قهوة باردة بحليب طازج", detailsEn: "Chilled coffee with fresh milk", price: 4, emoji: "☕", gradient: "from-[#655044] to-[#251b16]" },
 ];
 
+
+const demoPhotos: Record<string, string> = {
+  burger: "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=900&q=80",
+  pizza: "https://images.unsplash.com/photo-1574071318508-1cdbab80d002?auto=format&fit=crop&w=900&q=80",
+  fries: "https://images.unsplash.com/photo-1573080496219-bb080dd4f877?auto=format&fit=crop&w=900&q=80",
+  salad: "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?auto=format&fit=crop&w=900&q=80",
+  juice: "https://images.unsplash.com/photo-1600271886742-f049cd451bba?auto=format&fit=crop&w=900&q=80",
+  coffee: "https://images.unsplash.com/photo-1509042239860-f550ce710b93?auto=format&fit=crop&w=900&q=80",
+};
+
 export default function RestaurantExperience({ arabic }: Props) {
   const [category, setCategory] = useState<Category>("popular");
   const [cart, setCart] = useState<Record<string, number>>({});
@@ -90,7 +100,9 @@ export default function RestaurantExperience({ arabic }: Props) {
             <div className="grid gap-4 px-5 pb-8 md:grid-cols-2 md:px-8">
               {items.map((item) => (
                 <article key={item.id} className="overflow-hidden rounded-2xl border border-[#e7ddd1] bg-white shadow-sm">
-                  <div className={"flex h-36 items-center justify-center bg-gradient-to-br text-7xl " + item.gradient} aria-hidden="true">{item.emoji}</div>
+                  <div role="img" aria-label={arabic ? item.ar : item.en} className={"relative h-44 overflow-hidden bg-gradient-to-br bg-cover bg-center " + item.gradient} style={{ backgroundImage: "linear-gradient(180deg, transparent 60%, rgba(25,15,9,.25)), url(" + demoPhotos[item.id] + ")" }}>
+                    <span className="absolute bottom-3 end-3 rounded-full bg-[#211915]/70 px-3 py-1 text-[10px] font-bold tracking-wider text-white backdrop-blur-md">{arabic ? "صورة توضيحية" : "SAMPLE PHOTO"}</span>
+                  </div>
                   <div className="p-5">
                     <div className="flex items-start justify-between gap-3">
                       <div>
