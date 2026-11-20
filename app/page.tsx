@@ -7,6 +7,7 @@ import LeadQuoteForm from "./components/LeadQuoteForm";
 import BrandStudioPreview from "./components/BrandStudioPreview";
 import { useWebfikraLanguage } from "./hooks/useWebfikraLanguage";
 import FloatingActions from "./components/FloatingActions";
+import HeroFoodMedia from "./components/HeroFoodMedia";
 
 const services = [
   { n: "01", icon: "✦", ar: "مواقع تعكس هوية مطعمك", en: "Websites built around your brand", detailAr: "تصميم مخصّص يحوّل طابع مطعمك إلى حضور رقمي أنيق ومختلف.", detailEn: "A tailored digital presence shaped by your restaurant's identity.", meta: "BRAND EXPERIENCE" },
@@ -126,7 +127,7 @@ export default function Home() {
             <div className="wf-float relative ms-4 overflow-hidden rounded-[34px] border border-[#d59a69]/35 bg-[#2a1a11] p-2 shadow-[0_36px_110px_rgba(0,0,0,.55)] sm:ms-8">
               <div className="relative aspect-[5/5.4] overflow-hidden rounded-[28px] bg-[#4e2b19]">
                 <div className="absolute inset-0 bg-cover bg-center" style={{ backgroundImage: "linear-gradient(180deg,rgba(17,12,8,.12),rgba(17,12,8,.55)),url(https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=1000&q=80)" }} />
-                <video className="absolute inset-0 h-full w-full object-cover" src="/webfikra-hero.mp4" autoPlay muted loop playsInline preload="metadata" poster="https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=1000&q=80" aria-label={t("عرض مرئي لأطعمة المطاعم", "Restaurant food showcase")} />
+                <HeroFoodMedia />
                 <div className="absolute inset-0 bg-gradient-to-t from-[#140e0c]/85 via-transparent to-[#1c120d]/10" />
                 <div className="absolute inset-x-6 bottom-7 flex items-end justify-between gap-4 text-white sm:inset-x-9">
                   <div>
