@@ -1,24 +1,11 @@
 
 "use client";
 
-import { useEffect, useState } from "react";
 import Link from "next/link";
+import { useWebfikraLanguage } from "../hooks/useWebfikraLanguage";
 
 export default function OrderPage() {
-  const [arabic, setArabic] = useState(true);
-
-  useEffect(() => {
-    const savedLanguage = localStorage.getItem("webfikra-language");
-    if (savedLanguage) {
-      setArabic(savedLanguage === "ar");
-    }
-  }, []);
-
-  function toggleLanguage() {
-    const nextLanguage = !arabic;
-    setArabic(nextLanguage);
-    localStorage.setItem("webfikra-language", nextLanguage ? "ar" : "en");
-  }
+  const { arabic, toggleLanguage } = useWebfikraLanguage();
 
   const steps = [
     {
