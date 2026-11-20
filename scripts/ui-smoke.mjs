@@ -19,6 +19,12 @@ async function testDesktop() {
     assert.equal(response?.status(), 200, "Homepage should load");
     await page.locator("h1").first().waitFor();
     assert.match(await page.locator("h1").first().innerText(), /مطعمك/);
+    assert.equal(await page.locator("#insights").count(), 0, "Removed calculator must stay absent");
+    assert.equal(await page.getByText("راقب أرقامك.", { exact: false }).count(), 0, "Removed headline must stay absent");
+    assert.ok((await page.getByRole("link", { name: /تواصل مع WEBFIKRA عبر واتساب/ }).getAttribute("href"))?.startsWith("https://wa.me/96171524556"), "Floating contact should have the correct WhatsApp link");
+    const sitemapResponse = await page.request.get(baseUrl + "/sitemap.xml");
+    assert.equal(sitemapResponse.status(), 200, "Sitemap should be available");
+    assert.match(await sitemapResponse.text(), /privacy/);
     await page.screenshot({ path: "screenshots/desktop-home.png", animations: "disabled" });
     const heroCta = await page.getByRole("link", { name: /لنصمّم موقعك/ }).boundingBox();
     assert.ok(heroCta && heroCta.y + heroCta.height <= 900, "Primary desktop call to action should appear above the fold");
