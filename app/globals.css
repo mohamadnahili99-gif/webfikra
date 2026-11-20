@@ -28,9 +28,12 @@ body {
 
 /* WEBFIKRA 2026 visual identity — scoped to the marketing website. */
 .wf-site {
-  font-family: "Segoe UI", Tahoma, Arial, sans-serif;
+  font-family: var(--font-webfikra-arabic), Tahoma, Arial, sans-serif;
   color-scheme: dark;
   scroll-behavior: smooth;
+}
+.wf-site[lang="en"] {
+  font-family: var(--font-geist-sans), Arial, sans-serif;
 }
 .wf-site * {
   box-sizing: border-box;
