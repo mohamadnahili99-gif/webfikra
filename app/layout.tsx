@@ -19,7 +19,17 @@ const cairo = Cairo({
   display: "swap",
 });
 
+const siteOrigin = process.env.NEXT_PUBLIC_SITE_URL
+  || (process.env.VERCEL_URL ? "https://" + process.env.VERCEL_URL : "http://localhost:3000");
+
 export const metadata: Metadata = {
+  metadataBase: new URL(siteOrigin),
+  applicationName: "WEBFIKRA",
+  twitter: {
+    card: "summary_large_image",
+    title: "WEBFIKRA | تصميم مواقع المطاعم والمقاهي",
+    description: "مواقع ومنيو رقمي وتجربة طلب مخصصة للمطاعم والمقاهي والمخابز.",
+  },
   title: {
     default: "WEBFIKRA | تصميم مواقع المطاعم والمقاهي",
     template: "%s | WEBFIKRA",
