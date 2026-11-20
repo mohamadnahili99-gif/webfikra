@@ -73,7 +73,7 @@ export default function LeadQuoteForm({ arabic }: Props) {
   const labelStyle = "mb-2.5 block text-sm font-semibold text-[#e3d6c8]";
 
   return (
-    <section id="contact" dir={arabic ? "rtl" : "ltr"} className="relative overflow-hidden bg-[#14110f] px-5 py-24 text-white md:py-32">
+    <section id="contact" dir={arabic ? "rtl" : "ltr"} className="scroll-mt-24 relative overflow-hidden bg-[#14110f] px-5 py-24 text-white md:py-32">
       <div className="pointer-events-none absolute -left-24 bottom-0 h-[520px] w-[520px] rounded-full bg-[#a65320]/10 blur-[130px]" />
       <div className="relative mx-auto grid max-w-7xl gap-12 lg:grid-cols-[.9fr_1.1fr] lg:gap-20">
         <div className="lg:pt-10">
