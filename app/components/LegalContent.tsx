@@ -22,8 +22,8 @@ const content: Record<Kind, { titleAr: string; titleEn: string; introAr: string;
       {
         headingAr: "المعلومات التي تدخلها",
         headingEn: "Information you enter",
-        bodyAr: "يمكنك إدخال اسم النشاط، اختيارات الألوان، وبيانات طلب الموقع في نماذج تفاعلية. تتم المعاينة داخل متصفحك، ولا يحفظ هذا الموقع هذه المدخلات في قاعدة بيانات خاصة بنا حالياً. لا ترسل لنا النماذج بيانات تلقائياً.",
-        bodyEn: "You can type a business name, select visual options, and prepare a project inquiry. These previews run in your browser. The current site does not store those entries in our own database, and the forms do not automatically send them to us.",
+        bodyAr: "بيانات استوديو المعاينة ونموذج الاستفسار تُستخدم داخل متصفحك فقط ما لم تختر إرسال رسالة واتساب. عند تفعيل بوابة المطاعم، تُحفظ بيانات حساب المطعم والمنيو والأصناف التي يُدخلها صاحب الحساب في Supabase لتقديم الخدمة، وتُدار كلمات المرور عبر خدمة المصادقة الخاصة بـ Supabase، ولا نعرضها في الموقع.",
+        bodyEn: "Brand-studio choices and marketing inquiries stay in your browser unless you choose to send a WhatsApp message. If the restaurant portal is enabled, restaurant account details, menus, and items are stored in Supabase to provide the service. Passwords are handled by Supabase Auth and are not displayed on this website.",
       },
       {
         headingAr: "التواصل عبر واتساب",
@@ -72,8 +72,8 @@ const content: Record<Kind, { titleAr: string; titleEn: string; introAr: string;
       {
         headingAr: "التجارب التفاعلية",
         headingEn: "Interactive demonstrations",
-        bodyAr: "المنيو التجريبي واستوديو الألوان وسلة المشتريات مخصصون للتجربة فقط. لا تُنفذ من خلالها طلبات حقيقية ولا تتم معالجة مدفوعات. أدوات تسجيل المطاعم وإدارتها ليست خدمات مفعّلة في هذا الإصدار.",
-        bodyEn: "The menu, color studio, and cart are demonstrations only. They do not place real orders or process payments. Restaurant account and management tools are not active services in this release.",
+        bodyAr: "المنيو التسويقي التجريبي واستوديو الألوان مخصصان للعرض فقط. أما منيو المطعم المنشور من بوابة الإدارة، فعند تفعيل البوابة يسمح للزبون بإنشاء سلة وتحويل تفاصيلها إلى واتساب لمراجعة الرسالة وإرسالها بنفسه. لا يدير WEBFIKRA الدفع الإلكتروني أو يضمن استلام المطعم لرسالة واتساب.",
+        bodyEn: "The marketing demo menu and style studio are illustrative only. When enabled, a restaurant's published menu allows customers to prepare a cart and open WhatsApp to review and send a message themselves. WEBFIKRA does not process online payments or guarantee the restaurant receives a WhatsApp message.",
       },
       {
         headingAr: "المحتوى والأصول",
