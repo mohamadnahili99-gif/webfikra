@@ -1,16 +1,11 @@
 import type { Metadata } from "next";
-import PortalPaused from "../../components/PortalPaused";
+import PortalAuth from "../../components/PortalAuth";
 
 export const metadata: Metadata = {
-  title: "بوابة المطاعم",
+  title: "دخول إدارة المطاعم",
   robots: { index: false, follow: false },
 };
 
-export default function RestaurantLoginPage() {
-  return (
-    <PortalPaused
-      title="بوابة إدارة المطاعم غير مفعّلة حالياً"
-      description="نعمل على تجربة إدارة آمنة لمشاريع المطاعم. حالياً يمكنك طلب موقع أو منيو مخصّص والتواصل مع فريق WEBFIKRA مباشرة، من دون إنشاء حساب."
-    />
-  );
+export default function LoginPage() {
+  return <PortalAuth mode="login" />;
 }
