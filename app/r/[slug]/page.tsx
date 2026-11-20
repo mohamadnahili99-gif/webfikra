@@ -3,6 +3,9 @@ import { notFound } from "next/navigation";
 import { getPublishedMenu } from "@/lib/public-menu";
 import RestaurantMenu from "@/app/components/RestaurantMenu";
 
+// Next.js cacheComponents: this published menu must load live restaurant data.
+export const instant = false;
+
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params;
   const menu = await getPublishedMenu(slug);
