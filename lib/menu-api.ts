@@ -6,8 +6,8 @@ import {
 
 type Kind = "categories" | "items";
 const columns = {
-  categories: "id,restaurant_id,name,position,visible",
-  items: "id,restaurant_id,category_id,name,description,price,image_url,position,visible",
+  categories: "id,restaurant_id,name,name_en,position,visible",
+  items: "id,restaurant_id,category_id,name,name_en,description,description_en,price,image_url,position,visible",
 } as const;
 
 function readInput(kind: Kind, payload: Record<string, unknown>): { values: Record<string, unknown> } | { error: string } {
@@ -15,6 +15,7 @@ function readInput(kind: Kind, payload: Record<string, unknown>): { values: Reco
   if (!name) return { error: "أدخل اسم الصنف أو القسم" };
   const values: Record<string, unknown> = {
     name,
+    name_en: cleanText(payload.name_en, kind === "categories" ? 90 : 120),
     position: positionOf(payload.position),
     visible: payload.visible !== false,
   };
@@ -26,6 +27,7 @@ function readInput(kind: Kind, payload: Record<string, unknown>): { values: Reco
     if (!validImage(image_url)) return { error: "رابط الصورة يجب أن يكون HTTPS" };
     values.category_id = payload.category_id;
     values.description = cleanText(payload.description, 1000);
+    values.description_en = cleanText(payload.description_en, 1000);
     values.price = price;
     values.image_url = image_url;
   }
