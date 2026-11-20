@@ -7,7 +7,9 @@ export type Restaurant = {
   owner_id: string;
   slug: string;
   name: string;
+  name_en: string;
   description: string;
+  description_en: string;
   whatsapp: string;
   address: string;
   hours: string;
@@ -23,6 +25,7 @@ export type MenuCategory = {
   id: string;
   restaurant_id: string;
   name: string;
+  name_en: string;
   position: number;
   visible: boolean;
 };
@@ -31,7 +34,9 @@ export type MenuItem = {
   restaurant_id: string;
   category_id: string;
   name: string;
+  name_en: string;
   description: string;
+  description_en: string;
   price: number;
   image_url: string;
   position: number;
