@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useState, type FormEvent } from "react";
+import { useCallback, useEffect, useState, type FormEvent, type ReactNode } from "react";
 import Link from "next/link";
 import type { Restaurant, MenuCategory, MenuItem } from "@/lib/platform";
 
@@ -315,6 +315,6 @@ function Field({labelText,value,setValue,required=false,maxLength=250,placeholde
 }) {
   return <label className={label}>{labelText}<input type="text" dir={ltr?"ltr":undefined} value={value} onChange={e=>setValue(e.target.value)} required={required} maxLength={maxLength} placeholder={placeholder} className={input}/></label>;
 }
-function Shell({children}:{children:React.ReactNode}) {
+function Shell({children}:{children:ReactNode}) {
   return <main dir="rtl" lang="ar" className="min-h-screen bg-[#15110e] px-5 py-14 text-white"><div className="mx-auto max-w-6xl"><Link href="/" className="text-3xl font-black"><bdi dir="ltr">WEB<span className="text-[#eca26d]">FIKRA.</span></bdi></Link><div className="mt-16">{children}</div></div></main>;
 }
