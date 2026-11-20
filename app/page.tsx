@@ -326,7 +326,7 @@ export default function Home() {
             <p className="text-xs leading-7 text-white/45">{t("نستقبل استفسارات تصميم المواقع عبر واتساب، ونجهّز عرضاً مخصصاً بعد مناقشة مشروعك.", "We discuss website inquiries over WhatsApp and prepare tailored quotes for your project.")}</p>
           </div></div>
         </div>
-        <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-4 pt-8 text-xs text-white/35"><span>© 2026 WEBFIKRA. {t("جميع الحقوق محفوظة.", "All rights reserved.")}</span><div className="flex flex-wrap gap-5"><Link className="hover:text-white" href="/privacy">{t("سياسة الخصوصية", "Privacy")}</Link><Link className="hover:text-white" href="/terms">{t("شروط الاستخدام", "Terms")}</Link></div><span>YOUR VISION, OUR DIGITAL CREATION.</span></div>
+        <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-4 pt-8 text-xs text-white/35"><span>© 2026 WEBFIKRA. {t("جميع الحقوق محفوظة.", "All rights reserved.")}</span><div className="flex flex-wrap gap-5"><Link className="hover:text-white" href="/privacy">{t("سياسة الخصوصية", "Privacy")}</Link><Link className="hover:text-white" href="/terms">{t("شروط الاستخدام", "Terms")}</Link></div><span>{t("من الفكرة إلى تجربة رقمية.", "FROM IDEA TO DIGITAL EXPERIENCE.")}</span></div>
       </footer>
     </main>
   );
