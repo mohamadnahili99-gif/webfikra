@@ -5,7 +5,7 @@ This application has two deliberately separate layers:
 - **Marketing website**: public at `/`, bilingual, with a demo menu and brand studio.
 - **Restaurant platform (feature-gated)**: Supabase-backed authenticated portal at `/restaurants/login`, dashboard at `/restaurants/portal`, and public restaurant menus at `/r/[slug]`.
 
-No Supabase credentials or service-role keys have been committed. This code **will not accept logins or store restaurant data until you configure it**.
+No Supabase credentials or service-role keys have been committed. This code can accept invited-user logins on the configured `redesign-2026` Vercel preview, but requires an actual Supabase Auth user and end-to-end testing first. Public signups remain disabled. No production environment has been changed.
 
 ## 1. Create/choose a Supabase project
 
@@ -13,7 +13,7 @@ In your Supabase project dashboard, open SQL Editor and run:
 
 `supabase/migrations/20261119_webfikra_platform.sql`
 
-The migration creates `wf_restaurants`, `wf_categories`, and `wf_items` with Row Level Security. Then run `supabase/migrations/20261119_webfikra_media.sql` to provision the public image bucket with owner-only uploads. Public users can read only **published** restaurants and visible menu entries. Authenticated users can edit only restaurants they own.
+The migration creates `wf_restaurants`, `wf_categories`, and `wf_items` with Row Level Security. Then run `supabase/migrations/20261119_webfikra_media.sql` to provision the public image bucket with owner-only uploads, followed by `supabase/migrations/20261120_webfikra_security_hardening.sql` to correct the upload policy and withdraw unsafe table privileges. All three migrations have already been applied to `webfikra-platform`; do not reapply old migrations blindly. Public users can read only **published** restaurants and visible menu entries. Authenticated users can edit only restaurants they own.
 
 The script is intended for a fresh WEBFIKRA schema. Review migration policies against any existing customized schema before applying. Use the database backup and migration history maintained in Supabase.
 
@@ -28,7 +28,7 @@ Copy the variable names from `.env.example` into the Vercel project settings.
 | `WEBFIKRA_ALLOW_SIGNUPS` | Keep `false` until you have configured email confirmation and signup abuse protection |
 | `NEXT_PUBLIC_SITE_URL` | Optional canonical domain `https://webfikra.com` |
 
-Set these for the relevant Vercel environment and deploy the branch after configuration.
+The first three variables were added specifically to the `redesign-2026` Preview environment and the preview was deployed. Production variables and the published `main` branch were left untouched. A real login test is still required before enabling the service.
 
 **Never** paste your service-role key, JWT secret, Auth tokens, database password, or personal account credentials into a chat or commit them to GitHub.
 
