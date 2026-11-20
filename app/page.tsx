@@ -3,6 +3,7 @@
 import { useState } from "react";
 import RestaurantExperience from "./components/RestaurantExperience";
 import LeadQuoteForm from "./components/LeadQuoteForm";
+import BrandStudioPreview from "./components/BrandStudioPreview";
 import { useWebfikraLanguage } from "./hooks/useWebfikraLanguage";
 
 const services = [
@@ -47,6 +48,7 @@ export default function Home() {
   const nav = [
     { href: "#services", ar: "الخدمات", en: "Services" },
     { href: "#experience", ar: "جرّب المنيو", en: "Live Demo" },
+    { href: "#brand-studio", ar: "صمّم فكرتك", en: "Style Studio" },
     { href: "#showcase", ar: "أفكارنا", en: "Concepts" },
     { href: "#packages", ar: "الحلول", en: "Solutions" },
     { href: "#faq", ar: "الأسئلة", en: "FAQ" },
@@ -228,6 +230,9 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Interactive brand customization preview */}
+      <BrandStudioPreview arabic={arabic} />
+
       {/* Concepts: clearly hypothetical, not fabricated client testimonials */}
       <section id="showcase" className="scroll-mt-24 border-t border-white/10 bg-[#161310] px-5 py-24 sm:px-7 md:py-32">
         <div className="mx-auto max-w-7xl">
@@ -310,7 +315,7 @@ export default function Home() {
         <div className="mx-auto grid max-w-7xl gap-12 border-b border-white/10 pb-14 md:grid-cols-3">
           <div><a href="#home" className="text-4xl font-black tracking-[-.05em]"><bdi dir="ltr">WEB<span className="text-[#f0a065]">FIKRA.</span></bdi></a><p className="mt-5 max-w-xs text-sm leading-8 text-white/45">{t("نصمّم حضوراً رقمياً مختلفاً للمطاعم والمقاهي والمخابز. لأن فكرتك تستحق أن تكون مميزة.", "Distinct digital experiences for restaurants, cafés, and bakeries. Because your idea deserves to stand out.")}</p></div>
           <div><p className="mb-5 text-xs font-black tracking-widest text-[#e3a879]">{t("استكشف", "EXPLORE")}</p><div className="grid grid-cols-2 gap-4 text-sm text-white/60">
-            <a className="hover:text-[#f0a065]" href="#services">{t("خدماتنا", "Services")}</a><a className="hover:text-[#f0a065]" href="#experience">{t("جرّب المنيو", "Live demo")}</a><a className="hover:text-[#f0a065]" href="#showcase">{t("نماذجنا", "Concepts")}</a><a className="hover:text-[#f0a065]" href="#packages">{t("حلولنا", "Solutions")}</a><a className="hover:text-[#f0a065]" href="#faq">{t("الأسئلة الشائعة", "FAQ")}</a><a className="hover:text-[#f0a065]" href="#contact">{t("اطلب موقعك", "Start a project")}</a>
+            <a className="hover:text-[#f0a065]" href="#services">{t("خدماتنا", "Services")}</a><a className="hover:text-[#f0a065]" href="#experience">{t("جرّب المنيو", "Live demo")}</a><a className="hover:text-[#f0a065]" href="#brand-studio">{t("جرّب تصميمك", "Design preview")}</a><a className="hover:text-[#f0a065]" href="#showcase">{t("نماذجنا", "Concepts")}</a><a className="hover:text-[#f0a065]" href="#packages">{t("حلولنا", "Solutions")}</a><a className="hover:text-[#f0a065]" href="#faq">{t("الأسئلة الشائعة", "FAQ")}</a><a className="hover:text-[#f0a065]" href="#contact">{t("اطلب موقعك", "Start a project")}</a>
           </div></div>
           <div><p className="mb-5 text-xs font-black tracking-widest text-[#e3a879]">{t("تواصل معنا", "GET IN TOUCH")}</p><div className="flex flex-col items-start gap-4 text-sm text-white/60">
             <a className="hover:text-[#f0a065]" href="https://wa.me/96171524556" target="_blank" rel="noreferrer">WhatsApp: +961 71 524 556 ↗</a>
