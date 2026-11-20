@@ -24,3 +24,70 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+
+/* WEBFIKRA 2026 visual identity — scoped to the marketing website. */
+.wf-site {
+  font-family: var(--font-webfikra-arabic), Tahoma, Arial, sans-serif;
+  color-scheme: dark;
+  scroll-behavior: smooth;
+}
+.wf-site[lang="en"] {
+  font-family: var(--font-geist-sans), Arial, sans-serif;
+}
+.wf-site * {
+  box-sizing: border-box;
+}
+.wf-site ::selection {
+  background: #e99b65;
+  color: #281a12;
+}
+.wf-site .wf-gold-text {
+  color: #efa568;
+  background-image: linear-gradient(105deg, #f9c895 5%, #f1a56d 45%, #d78045 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+@keyframes wf-rise {
+  from { opacity: 0; transform: translateY(24px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes wf-float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-12px); }
+}
+@keyframes wf-float-delayed {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(8px); }
+}
+.wf-site .wf-reveal {
+  animation: wf-rise .9s ease-out both;
+}
+.wf-site .wf-float {
+  animation: wf-float 7s ease-in-out infinite;
+}
+.wf-site .wf-float-delayed {
+  animation: wf-float-delayed 6.5s ease-in-out infinite;
+}
+.wf-site a:focus-visible,
+.wf-site button:focus-visible,
+.wf-site summary:focus-visible,
+.wf-site input:focus-visible,
+.wf-site textarea:focus-visible,
+.wf-site select:focus-visible {
+  outline: 2px solid #ffbb87;
+  outline-offset: 3px;
+}
+.wf-site details summary::marker {
+  content: "";
+}
+@media (prefers-reduced-motion: reduce) {
+  .wf-site,
+  .wf-site * {
+    scroll-behavior: auto !important;
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .01ms !important;
+  }
+}

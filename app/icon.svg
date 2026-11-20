@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-labelledby="title">
+  <title id="title">WEBFIKRA</title>
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#ffc68e"/>
+      <stop offset="1" stop-color="#db783e"/>
+    </linearGradient>
+  </defs>
+  <rect width="128" height="128" rx="30" fill="#1b1511"/>
+  <path d="M18 36h19l10 42 12-42h12l12 42 10-42h18L95 95H77L65 57 53 95H35z" fill="url(#g)"/>
+  <circle cx="109" cy="98" r="7" fill="#f8b97c"/>
+</svg>
