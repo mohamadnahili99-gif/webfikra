@@ -25,6 +25,12 @@ const siteOrigin = process.env.NEXT_PUBLIC_SITE_URL
 export const metadata: Metadata = {
   metadataBase: new URL(siteOrigin),
   applicationName: "WEBFIKRA",
+  alternates: {
+    canonical: "/",
+  },
+  robots: process.env.VERCEL_ENV === "preview"
+    ? { index: false, follow: false }
+    : { index: true, follow: true },
   twitter: {
     card: "summary_large_image",
     title: "WEBFIKRA | تصميم مواقع المطاعم والمقاهي",
