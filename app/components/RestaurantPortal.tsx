@@ -86,7 +86,9 @@ export default function RestaurantPortal() {
   useEffect(() => {
     if (!selectedId) return;
     let active = true;
-    loadMenu(selectedId).catch((e) => { if (active) setError(errorMessage(e)); });
+    // Start after the current render so the effect itself never sets state synchronously.
+    Promise.resolve().then(() => loadMenu(selectedId))
+      .catch((e) => { if (active) setError(errorMessage(e)); });
     return () => { active = false; };
   }, [selectedId, loadMenu]);
 
