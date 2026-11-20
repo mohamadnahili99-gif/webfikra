@@ -31,7 +31,15 @@ async function testDesktop() {
     const brandName = page.getByLabel("اسم النشاط", { exact: true });
     await brandName.fill("مطعم الاختبار");
     await page.getByRole("button", { name: "مقهى", exact: true }).click();
+    const palettes = page.locator("#brand-studio fieldset").nth(1).getByRole("button");
+    assert.equal(await palettes.count(), 12, "Style studio should offer 12 palettes");
     await page.getByRole("button", { name: "زيتي وذهبي" }).click();
+    await page.getByRole("button", { name: "كحلي ونحاسي" }).click();
+    assert.equal(await page.getByRole("button", { name: "كحلي ونحاسي" }).getAttribute("aria-pressed"), "true");
+    await page.getByRole("button", { name: "تحريري", exact: true }).click();
+    await page.getByRole("button", { name: "مستقيم", exact: true }).click();
+    assert.equal(await page.getByRole("button", { name: "مستقيم", exact: true }).getAttribute("aria-pressed"), "true");
+    assert.equal(await page.locator("#preview-accent-color").getAttribute("type"), "color");
     await page.getByRole("button", { name: "هاتف", exact: true }).click();
     assert.equal(await page.locator("#brand-studio").getByText("مطعم الاختبار").count(), 1);
     await page.locator("#brand-studio").screenshot({ path: "screenshots/desktop-brand-studio.png", animations: "disabled" });
