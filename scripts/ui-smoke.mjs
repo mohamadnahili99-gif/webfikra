@@ -73,7 +73,26 @@ async function testDesktop() {
       body: document.documentElement.scrollWidth,
     }));
     assert.ok(browserWidth.body <= browserWidth.viewport + 2, "Desktop has unexpected horizontal overflow");
-    console.log("PASS: desktop layout, languages, brand studio, demo cart, WhatsApp quote.");
+    // Verify public support pages and ensure inactive account forms never request passwords.
+    const privacyResponse = await page.goto(baseUrl + "/privacy", { waitUntil: "domcontentloaded" });
+    assert.equal(privacyResponse?.status(), 200, "Privacy page should load");
+    assert.match(await page.locator("h1").innerText(), /سياسة الخصوصية/);
+    await page.screenshot({ path: "screenshots/desktop-privacy.png", animations: "disabled" });
+    await page.getByRole("button", { name: "EN" }).click();
+    assert.match(await page.locator("h1").innerText(), /Privacy Notice/);
+
+    const termsResponse = await page.goto(baseUrl + "/terms", { waitUntil: "domcontentloaded" });
+    assert.equal(termsResponse?.status(), 200, "Terms page should load");
+    assert.match(await page.locator("h1").innerText(), /Website Use Terms/);
+
+    for (const path of ["/restaurants/login", "/restaurants/register"]) {
+      const portalResponse = await page.goto(baseUrl + path, { waitUntil: "domcontentloaded" });
+      assert.equal(portalResponse?.status(), 200);
+      assert.equal(await page.locator('input[type="password"]').count(), 0, "Inactive portal must not ask for passwords");
+      assert.match(await page.locator("h1").innerText(), /غير/);
+    }
+
+    console.log("PASS: desktop layout, languages, brand studio, demo cart, WhatsApp quote, privacy, terms, inactive portal.");
   } finally {
     await context.close();
   }
