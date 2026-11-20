@@ -4,7 +4,6 @@ import {
   type Restaurant,
 } from "@/lib/platform";
 
-export const dynamic = "force-dynamic";
 const columns = "id,owner_id,slug,name,description,whatsapp,address,hours,instagram,tiktok,logo_url,cover_url,accent_color,currency,published";
 
 function parseRestaurant(input: Record<string, unknown>) {
