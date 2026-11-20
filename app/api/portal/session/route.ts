@@ -10,8 +10,6 @@ import {
   supabase,
 } from "@/lib/platform";
 
-export const dynamic = "force-dynamic";
-
 type AuthAnswer = {
   access_token?: string;
   refresh_token?: string;
