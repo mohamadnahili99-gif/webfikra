@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useState, type FormEvent, type ReactNode } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import type { Restaurant, MenuCategory, MenuItem } from "@/lib/platform";
 
 type Draft = Omit<Restaurant, "id" | "owner_id">;
@@ -34,6 +35,7 @@ async function send<T>(url: string, method: string = "GET", body?: Json): Promis
 }
 
 export default function RestaurantPortal() {
+  const router = useRouter();
   const [session, setSession] = useState<Session | null>(null);
   const [restaurants, setRestaurants] = useState<Restaurant[]>([]);
   const [selectedId, setSelectedId] = useState("");
@@ -82,7 +84,7 @@ export default function RestaurantPortal() {
   }, [loadRestaurants]);
 
   useEffect(() => {
-    if (!selectedId) { setCategories([]); setItems([]); return; }
+    if (!selectedId) return;
     let active = true;
     loadMenu(selectedId).catch((e) => { if (active) setError(errorMessage(e)); });
     return () => { active = false; };
@@ -150,7 +152,7 @@ export default function RestaurantPortal() {
   }
   async function logout() {
     setBusy(true);
-    try { await send("/api/portal/session", "POST", { mode: "logout" }); window.location.assign("/restaurants/login"); }
+    try { await send("/api/portal/session", "POST", { mode: "logout" }); router.push("/restaurants/login"); }
     catch (e) { setError(errorMessage(e)); setBusy(false); }
   }
 
