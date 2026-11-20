@@ -95,7 +95,7 @@ export default function Home() {
               <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-[#e9a474]" />
               WEBFIKRA / DIGITAL EXPERIENCES
             </div>
-            <h1 className="max-w-[720px] text-[clamp(2.85rem,6vw,5.8rem)] font-black leading-[1.17] tracking-[-.055em]">
+            <h1 className="max-w-[720px] text-[clamp(2.65rem,4.5vw,4.35rem)] font-black leading-[1.22] tracking-[-.045em]">
               {t("مطعمك يستحق", "Your restaurant deserves")}<br />
               <span className="wf-gold-text">{t("أكثر من مجرد", "more than just")}</span><br />
               {t("موقع إلكتروني.", "a website.")}
