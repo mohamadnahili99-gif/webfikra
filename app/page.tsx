@@ -1,9 +1,10 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Link from "next/link";
 import RestaurantExperience from "./components/RestaurantExperience";
 import LeadQuoteForm from "./components/LeadQuoteForm";
+import { useWebfikraLanguage } from "./hooks/useWebfikraLanguage";
 
 const services = [
   { n: "01", icon: "✦", ar: "مواقع تعكس هوية مطعمك", en: "Websites built around your brand", detailAr: "تصميم مخصّص يحوّل طابع مطعمك إلى حضور رقمي أنيق ومختلف.", detailEn: "A tailored digital presence shaped by your restaurant's identity.", meta: "BRAND EXPERIENCE" },
@@ -40,25 +41,9 @@ const faqs = [
 ];
 
 export default function Home() {
-  const [arabic, setArabic] = useState(true);
+  const { arabic, toggleLanguage } = useWebfikraLanguage();
   const [menuOpen, setMenuOpen] = useState(false);
   const t = (ar: string, en: string) => (arabic ? ar : en);
-
-  useEffect(() => {
-    try {
-      if (window.localStorage.getItem("webfikra-language") === "en") setArabic(false);
-    } catch {
-      // Private browsing may disable storage; Arabic remains the default.
-    }
-  }, []);
-
-  function toggleLanguage() {
-    const next = !arabic;
-    setArabic(next);
-    setMenuOpen(false);
-    try { window.localStorage.setItem("webfikra-language", next ? "ar" : "en"); }
-    catch { /* Language toggle still works without storage. */ }
-  }
 
   const nav = [
     { href: "#services", ar: "الخدمات", en: "Services" },
