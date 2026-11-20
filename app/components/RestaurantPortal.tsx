@@ -8,16 +8,16 @@ import type { Restaurant, MenuCategory, MenuItem } from "@/lib/platform";
 type Draft = Omit<Restaurant, "id" | "owner_id">;
 type Tab = "restaurant" | "categories" | "items";
 type Session = { configured: boolean; authenticated: boolean; user?: { email: string } };
-type CategoryDraft = { id: string; name: string; position: number; visible: boolean };
-type ItemDraft = { id: string; category_id: string; name: string; description: string; price: string; image_url: string; position: number; visible: boolean };
+type CategoryDraft = { id: string; name: string; name_en: string; position: number; visible: boolean };
+type ItemDraft = { id: string; category_id: string; name: string; name_en: string; description: string; description_en: string; price: string; image_url: string; position: number; visible: boolean };
 
 const blankRestaurant: Draft = {
-  slug: "", name: "", description: "", whatsapp: "", address: "", hours: "",
+  slug: "", name: "", name_en: "", description: "", description_en: "", whatsapp: "", address: "", hours: "",
   instagram: "", tiktok: "", logo_url: "", cover_url: "",
   accent_color: "#EF9754", currency: "USD", published: false,
 };
-const blankCategory: CategoryDraft = { id: "", name: "", position: 0, visible: true };
-const blankItem: ItemDraft = { id: "", category_id: "", name: "", description: "", price: "0", image_url: "", position: 0, visible: true };
+const blankCategory: CategoryDraft = { id: "", name: "", name_en: "", position: 0, visible: true };
+const blankItem: ItemDraft = { id: "", category_id: "", name: "", name_en: "", description: "", description_en: "", price: "0", image_url: "", position: 0, visible: true };
 
 const input = "mt-2 w-full rounded-xl border border-[#dfd3c6] bg-white px-4 py-3 text-sm text-[#2d2119] outline-none placeholder:text-[#a7988b] focus:border-[#b9794a] focus:ring-2 focus:ring-[#e6b48e]/20";
 const label = "block text-sm font-bold text-[#473529]";
@@ -237,6 +237,7 @@ export default function RestaurantPortal() {
               <h2 className="text-2xl font-black">{selectedId ? "تعديل بيانات المطعم" : "إنشاء مطعم جديد"}</h2>
               <form onSubmit={saveRestaurant} className="mt-7 grid gap-5 sm:grid-cols-2">
                 <Field labelText="اسم المطعم *" value={restaurant.name} setValue={v=>editRestaurant("name",v)} required maxLength={100}/>
+                <Field labelText="اسم المطعم بالإنجليزية (اختياري)" value={restaurant.name_en} setValue={v=>editRestaurant("name_en",v)} maxLength={100} ltr/>
                 <Field labelText="رابط المنيو (إنجليزي) *" value={restaurant.slug} setValue={v=>editRestaurant("slug",v.toLowerCase().replace(/[^a-z0-9-]/g,""))} required maxLength={40} placeholder="my-restaurant" ltr />
                 <Field labelText="رقم واتساب دولي *" value={restaurant.whatsapp} setValue={v=>editRestaurant("whatsapp",v.replace(/\D/g,""))} required maxLength={15} placeholder="96171524556" ltr />
                 <Field labelText="العنوان" value={restaurant.address} setValue={v=>editRestaurant("address",v)} maxLength={300} />
@@ -255,6 +256,9 @@ export default function RestaurantPortal() {
                 </label>
                 <label className={label+" sm:col-span-2"}>نبذة المطعم
                   <textarea value={restaurant.description} maxLength={1200} rows={3} onChange={e=>editRestaurant("description",e.target.value)} className={input+" resize-y"} />
+                </label>
+                <label className={label+" sm:col-span-2"}>نبذة المطعم بالإنجليزية (اختياري)
+                  <textarea dir="ltr" value={restaurant.description_en} maxLength={1200} rows={3} onChange={e=>editRestaurant("description_en",e.target.value)} className={input+" resize-y"} />
                 </label>
                 <label className="flex items-center gap-3 rounded-xl border border-[#ddcbb9] bg-[#f7eee5] p-4 text-sm font-bold sm:col-span-2">
                   <input type="checkbox" checked={restaurant.published} onChange={e=>editRestaurant("published",e.target.checked)} className="h-5 w-5 accent-[#ad6638]"/>
@@ -276,6 +280,7 @@ export default function RestaurantPortal() {
               <p className="mt-3 text-sm text-[#806e61]">مثال: مناقيش، كعك، عصائر، صوصات. يمكنك إخفاء أي قسم.</p>
               <form onSubmit={saveCategory} className="mt-7 grid items-end gap-4 sm:grid-cols-[1fr_110px_auto]">
                 <Field labelText="اسم القسم" value={category.name} setValue={v=>setCategory(c=>({...c,name:v}))} maxLength={90} required />
+                <Field labelText="اسم القسم بالإنجليزية" value={category.name_en} setValue={v=>setCategory(c=>({...c,name_en:v}))} maxLength={90} ltr/>
                 <label className={label}>الترتيب<input type="number" min={0} max={9999} value={category.position} onChange={e=>setCategory(c=>({...c,position:Number(e.target.value)}))} className={input}/></label>
                 <button disabled={busy} type="submit" className="rounded-xl bg-[#ad6638] px-5 py-3.5 text-sm font-black text-white disabled:opacity-40">{category.id?"تحديث":"إضافة"}</button>
                 <label className="flex items-center gap-2 text-xs font-bold sm:col-span-3"><input type="checkbox" checked={category.visible} onChange={e=>setCategory(c=>({...c,visible:e.target.checked}))}/> إظهار القسم</label>
@@ -283,7 +288,7 @@ export default function RestaurantPortal() {
               </form>
               <div className="mt-8 space-y-3">{categories.map(c=><div key={c.id} className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-[#e4d8cd] bg-white p-4">
                 <div><p className="font-black">{c.name}</p><p className="mt-1 text-xs text-[#9b8171]">{c.visible?"ظاهر":"مخفي"} · الترتيب {c.position}</p></div>
-                <div className="flex gap-3 text-xs font-bold"><button type="button" onClick={()=>setCategory({id:c.id,name:c.name,position:c.position,visible:c.visible})} className="text-[#9f6039]">تعديل</button><button type="button" disabled={busy} onClick={()=>removeCategory(c.id)} className="text-red-700">حذف</button></div>
+                <div className="flex gap-3 text-xs font-bold"><button type="button" onClick={()=>setCategory({id:c.id,name:c.name,name_en:c.name_en,position:c.position,visible:c.visible})} className="text-[#9f6039]">تعديل</button><button type="button" disabled={busy} onClick={()=>removeCategory(c.id)} className="text-red-700">حذف</button></div>
               </div>)}</div>
               {!categories.length && <p className="mt-6 text-sm text-[#9b8371]">لا توجد أقسام. أضف قسمك الأول.</p>}
             </section>}
@@ -293,6 +298,7 @@ export default function RestaurantPortal() {
               {categories.length === 0 ? <p className="mt-6 text-sm text-[#936f55]">أضف قسماً أولاً قبل إضافة الأصناف.</p> : (
                 <form onSubmit={saveItem} className="mt-7 grid gap-4 sm:grid-cols-2">
                   <Field labelText="اسم الصنف *" value={item.name} setValue={v=>setItem(c=>({...c,name:v}))} required maxLength={120}/>
+                  <Field labelText="اسم الصنف بالإنجليزية" value={item.name_en} setValue={v=>setItem(c=>({...c,name_en:v}))} maxLength={120} ltr/>
                   <label className={label}>القسم *
                     <select required className={input} value={item.category_id} onChange={e=>setItem(c=>({...c,category_id:e.target.value}))}>
                       <option value="">اختر القسم</option>{categories.map(c=><option key={c.id} value={c.id}>{c.name}</option>)}
@@ -302,6 +308,7 @@ export default function RestaurantPortal() {
                   <Field labelText="رابط صورة الصنف HTTPS" value={item.image_url} setValue={v=>setItem(c=>({...c,image_url:v}))} maxLength={1000} ltr/>
                   <UploadField labelText="رفع صورة الصنف من جهازك" enabled={!busy} onFile={(file)=>uploadImage(file,"image_url")} />
                   <Field labelText="وصف / مكونات الصنف" value={item.description} setValue={v=>setItem(c=>({...c,description:v}))} maxLength={1000}/>
+                  <Field labelText="الوصف بالإنجليزية" value={item.description_en} setValue={v=>setItem(c=>({...c,description_en:v}))} maxLength={1000} ltr/>
                   <label className={label}>الترتيب<input type="number" min={0} max={9999} className={input} value={item.position} onChange={e=>setItem(c=>({...c,position:Number(e.target.value)}))}/></label>
                   <label className="flex items-center gap-3 text-sm font-bold"><input type="checkbox" checked={item.visible} onChange={e=>setItem(c=>({...c,visible:e.target.checked}))}/> إظهار الصنف</label>
                   <div className="flex flex-wrap gap-3 sm:col-span-2">
@@ -312,7 +319,7 @@ export default function RestaurantPortal() {
               )}
               <div className="mt-8 space-y-3">{items.map(i=><div key={i.id} className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-[#e4d8cd] bg-white p-4">
                 <div><p className="font-black">{i.name}</p><p className="mt-1 text-xs text-[#9b8171]">{categories.find(c=>c.id===i.category_id)?.name || "قسم"} · {Number(i.price).toFixed(2)} {restaurant.currency} · {i.visible?"ظاهر":"مخفي"}</p></div>
-                <div className="flex gap-3 text-xs font-bold"><button type="button" className="text-[#9f6039]" onClick={()=>setItem({id:i.id,category_id:i.category_id,name:i.name,description:i.description,price:String(i.price),image_url:i.image_url,position:i.position,visible:i.visible})}>تعديل</button><button disabled={busy} type="button" onClick={()=>removeItem(i.id)} className="text-red-700">حذف</button></div>
+                <div className="flex gap-3 text-xs font-bold"><button type="button" className="text-[#9f6039]" onClick={()=>setItem({id:i.id,category_id:i.category_id,name:i.name,name_en:i.name_en,description:i.description,description_en:i.description_en,price:String(i.price),image_url:i.image_url,position:i.position,visible:i.visible})}>تعديل</button><button disabled={busy} type="button" onClick={()=>removeItem(i.id)} className="text-red-700">حذف</button></div>
               </div>)}</div>
               {!items.length && <p className="mt-6 text-sm text-[#9b8371]">لم تُضف أصنافاً بعد.</p>}
             </section>}
@@ -343,7 +350,7 @@ function UploadField({ labelText, enabled, onFile }: { labelText: string; enable
 
 function toDraft(r: Restaurant): Draft {
   return {
-    slug: r.slug, name: r.name, description: r.description, whatsapp: r.whatsapp, address: r.address,
+    slug: r.slug, name: r.name, name_en: r.name_en, description: r.description, description_en: r.description_en, whatsapp: r.whatsapp, address: r.address,
     hours: r.hours, instagram: r.instagram, tiktok: r.tiktok, logo_url: r.logo_url, cover_url: r.cover_url,
     accent_color: r.accent_color, currency: r.currency, published: r.published,
   };
