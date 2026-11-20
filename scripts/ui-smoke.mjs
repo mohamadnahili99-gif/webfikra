@@ -112,7 +112,7 @@ async function testDesktop() {
     assert.equal(hiddenMenuAPI.status(), 404, "Unpublished menu data must not be accessible");
     await page.goto(baseUrl + "/r/unpublished-test", { waitUntil: "domcontentloaded" });
     await page.getByRole("heading", { name: /هذه الصفحة غير موجودة/ }).waitFor();
-    await page.locator('meta[name="robots"][content*="noindex"]').waitFor();
+    await page.locator('meta[name="robots"][content*="noindex"]').first().waitFor({ state: "attached" });
 
     const orderResponse = await page.goto(baseUrl + "/order", { waitUntil: "domcontentloaded" });
     assert.equal(orderResponse?.status(), 200, "Standalone project order page should load");
