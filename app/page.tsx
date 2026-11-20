@@ -6,6 +6,7 @@ import RestaurantExperience from "./components/RestaurantExperience";
 import LeadQuoteForm from "./components/LeadQuoteForm";
 import BrandStudioPreview from "./components/BrandStudioPreview";
 import { useWebfikraLanguage } from "./hooks/useWebfikraLanguage";
+import FloatingActions from "./components/FloatingActions";
 
 const services = [
   { n: "01", icon: "✦", ar: "مواقع تعكس هوية مطعمك", en: "Websites built around your brand", detailAr: "تصميم مخصّص يحوّل طابع مطعمك إلى حضور رقمي أنيق ومختلف.", detailEn: "A tailored digital presence shaped by your restaurant's identity.", meta: "BRAND EXPERIENCE" },
@@ -310,6 +311,8 @@ export default function Home() {
       </section>
 
       <LeadQuoteForm arabic={arabic} />
+
+      <FloatingActions arabic={arabic} />
 
       {/* Footer */}
       <footer className="border-t border-white/[.08] bg-[#0d0c0b] px-5 pb-8 pt-16 sm:px-7">
