@@ -39,6 +39,7 @@ export default function RestaurantExperience({ arabic }: Props) {
   const [category, setCategory] = useState<Category>("popular");
   const [cart, setCart] = useState<Record<string, number>>({});
   const [showCart, setShowCart] = useState(false);
+  const [showMessage, setShowMessage] = useState(false);
 
   const items = menu.filter((item) => item.category === category);
   const totalCount = Object.values(cart).reduce((sum, amount) => sum + amount, 0);
@@ -46,6 +47,24 @@ export default function RestaurantExperience({ arabic }: Props) {
     () => menu.reduce((sum, item) => sum + item.price * (cart[item.id] || 0), 0),
     [cart],
   );
+
+  const sampleOrderMessage = useMemo(() => {
+    const lines = menu.filter((item) => cart[item.id] > 0).map((item) =>
+      "- " + (arabic ? item.ar : item.en) + " × " + cart[item.id] +
+      " — $" + (item.price * cart[item.id]).toFixed(2),
+    );
+    return [
+      arabic ? "طلب تجريبي - بيت المذاق" : "SAMPLE ORDER - THE FLAVOR HOUSE",
+      ...lines,
+      arabic ? "المجموع: $" + total.toFixed(2) : "Total: $" + total.toFixed(2),
+      arabic ? "هذا مثال فقط، لا يُرسل إلى أي مطعم." : "This is only an example. No order is submitted.",
+    ].join("\n");
+  }, [cart, arabic, total]);
+
+  function clearCart() {
+    setCart({});
+    setShowMessage(false);
+  }
 
   function changeQuantity(id: string, adjustment: number) {
     setCart((previous) => ({
@@ -125,7 +144,7 @@ export default function RestaurantExperience({ arabic }: Props) {
             </div>
           </div>
 
-          <aside className="flex flex-col justify-between rounded-[30px] border border-[#b98a5d]/30 bg-gradient-to-b from-[#35251a] to-[#1b1613] p-7 shadow-[0_28px_80px_rgba(0,0,0,.26)]">
+          <aside id="demo-cart" className="scroll-mt-24 flex flex-col justify-between rounded-[30px] border border-[#b98a5d]/30 bg-gradient-to-b from-[#35251a] to-[#1b1613] p-7 shadow-[0_28px_80px_rgba(0,0,0,.26)]">
             <div>
               <p className="mb-3 text-xs font-black tracking-widest text-[#f4b37d]">{arabic ? "تجربة الطلب" : "ORDER PREVIEW"}</p>
               <h3 className="text-2xl font-black">{arabic ? "طلبك، بخطوات بسيطة." : "A simpler way to order."}</h3>
@@ -141,18 +160,37 @@ export default function RestaurantExperience({ arabic }: Props) {
               </div>
               <div className="rounded-2xl bg-white/[0.07] p-5">
                 <p className="text-sm font-bold text-white/60">{arabic ? "عناصر السلة" : "Items in cart"}</p>
-                <div className="mt-2 flex items-end justify-between"><strong className="text-4xl">{totalCount}</strong><strong className="text-2xl text-[#f5ab6e]">${total.toFixed(2)}</strong></div>
+                <div aria-live="polite" className="mt-2 flex items-end justify-between"><strong className="text-4xl">{totalCount}</strong><strong className="text-2xl text-[#f5ab6e]">${total.toFixed(2)}</strong></div>
                 {showCart && <div className="mt-5 border-t border-white/10 pt-4">
                   {menu.filter((item) => cart[item.id]).length ? menu.filter((item) => cart[item.id]).map((item) => <p key={item.id} className="flex justify-between gap-2 py-1 text-sm text-white/70"><span>{arabic ? item.ar : item.en} × {cart[item.id]}</span><span>${(item.price * cart[item.id]).toFixed(2)}</span></p>) : <p className="text-sm text-white/60">{arabic ? "السلة فارغة. أضف صنفاً لتجربتها." : "Your cart is empty. Add an item to try it."}</p>}
                 </div>}
               </div>
             </div>
             <div className="mt-8">
-              <button type="button" onClick={() => setShowCart((value) => !value)} className="w-full rounded-full bg-[#ee934e] px-5 py-4 font-black text-[#21150d] transition hover:bg-[#f5ae78]">{showCart ? (arabic ? "إخفاء تفاصيل السلة" : "Hide cart details") : (arabic ? "شاهد سلتك التجريبية" : "View demo cart")}</button>
+              <button type="button" aria-expanded={showCart} onClick={() => setShowCart((value) => !value)} className="w-full rounded-full bg-[#ee934e] px-5 py-4 font-black text-[#21150d] transition hover:bg-[#f5ae78]">{showCart ? (arabic ? "إخفاء تفاصيل السلة" : "Hide cart details") : (arabic ? "شاهد سلتك التجريبية" : "View demo cart")}</button>
+              <div className="mt-3 grid grid-cols-2 gap-2">
+                <button type="button" disabled={totalCount === 0} onClick={() => setShowMessage((value) => !value)} aria-expanded={showMessage} className="rounded-full border border-[#f4b688]/50 px-3 py-3 text-xs font-bold text-[#ffd1ac] transition hover:bg-white/10 disabled:cursor-not-allowed disabled:opacity-40">{arabic ? "نص الطلب التجريبي" : "Sample order text"}</button>
+                <button type="button" disabled={totalCount === 0} onClick={clearCart} className="rounded-full border border-white/15 px-3 py-3 text-xs font-bold text-white/70 transition hover:bg-white/10 disabled:cursor-not-allowed disabled:opacity-40">{arabic ? "إفراغ السلة" : "Clear cart"}</button>
+              </div>
+              {showMessage && totalCount > 0 && (
+                <div className="mt-4 rounded-xl border border-white/15 bg-black/25 p-4">
+                  <p className="mb-3 text-xs font-black text-[#f4b688]">{arabic ? "مثال على رسالة الطلب" : "EXAMPLE ORDER MESSAGE"}</p>
+                  <pre dir={arabic ? "rtl" : "ltr"} className="whitespace-pre-wrap break-words font-sans text-xs leading-7 text-white/80">{sampleOrderMessage}</pre>
+                </div>
+              )}
               <p className="mt-4 text-center text-xs leading-5 text-white/45">{arabic ? "عرض تفاعلي فقط — لا تُرسل طلبات ولا تُحصّل مدفوعات." : "Interactive preview only — no orders or payments are submitted."}</p>
             </div>
           </aside>
         </div>
+        {totalCount > 0 && (
+          <div className="sticky bottom-3 z-20 mx-auto mt-5 max-w-sm lg:hidden">
+            <button type="button" onClick={() => document.getElementById("demo-cart")?.scrollIntoView({ behavior: "smooth", block: "start" })}
+              className="flex w-full items-center justify-between gap-3 rounded-full border border-[#ffbd89]/45 bg-[#302119] px-6 py-4 text-sm font-black text-white shadow-[0_12px_40px_rgba(0,0,0,.4)]">
+              <span>{arabic ? "عرض السلة" : "View cart"} ({totalCount})</span>
+              <span className="text-[#ffbf90]">${total.toFixed(2)} ↗</span>
+            </button>
+          </div>
+        )}
       </div>
     </section>
   );
