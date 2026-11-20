@@ -81,7 +81,7 @@ export default function LeadQuoteForm({ arabic }: Props) {
             {arabic ? "07 / لنبنِ شيئاً مختلفاً" : "07 / LET'S WORK TOGETHER"}
           </p>
           <h2 className="max-w-lg text-4xl font-black leading-[1.3] md:text-6xl">
-            {arabic ? <>فكرتك تستحق <span className="text-[#f3a367]">أن يراها الجميع.</span></> : <>Let's make your idea <span className="text-[#f3a367]">impossible to ignore.</span></>}
+            {arabic ? <>فكرتك تستحق <span className="text-[#f3a367]">أن يراها الجميع.</span></> : <>Let&apos;s make your idea <span className="text-[#f3a367]">impossible to ignore.</span></>}
           </h2>
           <p className="mt-7 max-w-md text-base leading-9 text-white/55">
             {arabic
