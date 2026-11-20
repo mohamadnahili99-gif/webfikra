@@ -92,7 +92,15 @@ async function testDesktop() {
       assert.match(await page.locator("h1").innerText(), /غير/);
     }
 
-    console.log("PASS: desktop layout, languages, brand studio, demo cart, WhatsApp quote, privacy, terms, inactive portal.");
+    const orderResponse = await page.goto(baseUrl + "/order", { waitUntil: "domcontentloaded" });
+    assert.equal(orderResponse?.status(), 200, "Standalone project order page should load");
+    assert.match(await page.locator("h1").innerText(), /خلّينا نحوّل فكرتك/);
+    await page.locator("#quote-name").fill("زائر الطلب");
+    await page.locator("#quote-business").fill("مقهى جديد");
+    await page.getByRole("button", { name: "أرسل طلبي عبر واتساب" }).waitFor();
+    await page.screenshot({ path: "screenshots/desktop-order.png", animations: "disabled" });
+
+    console.log("PASS: desktop layout, languages, brand studio, cart, WhatsApp, privacy, terms, inactive portal, order page.");
   } finally {
     await context.close();
   }
