@@ -94,12 +94,21 @@ async function testDesktop() {
     await page.getByRole("button", { name: "عربي" }).click();
     await page.getByRole("heading", { name: "شروط استخدام الموقع" }).waitFor();
 
+    const portalStatus = await (await page.request.get(baseUrl + "/api/portal/session")).json();
+    assert.equal(portalStatus.configured, false, "CI without Supabase settings must not accept accounts");
     for (const path of ["/restaurants/login", "/restaurants/register"]) {
       const portalResponse = await page.goto(baseUrl + path, { waitUntil: "domcontentloaded" });
       assert.equal(portalResponse?.status(), 200);
-      assert.equal(await page.locator('input[type="password"]').count(), 0, "Inactive portal must not ask for passwords");
-      assert.match(await page.locator("h1").innerText(), /غير/);
+      await page.getByText(/بوابة الحسابات غير مفعّلة/).waitFor();
+      assert.equal(await page.locator('input[type="password"]').count(), 0, "Unconfigured portal must not ask for passwords");
     }
+    const privatePortal = await page.goto(baseUrl + "/restaurants/portal", { waitUntil: "domcontentloaded" });
+    assert.equal(privatePortal?.status(), 200);
+    await page.getByRole("heading", { name: /بوابة المطاعم بانتظار ربط Supabase/ }).waitFor();
+    const privateApi = await page.request.get(baseUrl + "/api/portal/restaurants");
+    assert.equal(privateApi.status(), 503, "Unconfigured management API must remain closed");
+    const hiddenMenu = await page.goto(baseUrl + "/r/unpublished-test", { waitUntil: "domcontentloaded" });
+    assert.equal(hiddenMenu?.status(), 404, "Unpublished or missing menus must not be visible");
 
     const orderResponse = await page.goto(baseUrl + "/order", { waitUntil: "domcontentloaded" });
     assert.equal(orderResponse?.status(), 200, "Standalone project order page should load");
