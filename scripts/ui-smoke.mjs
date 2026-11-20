@@ -107,8 +107,12 @@ async function testDesktop() {
     await page.getByRole("heading", { name: /بوابة المطاعم بانتظار ربط Supabase/ }).waitFor();
     const privateApi = await page.request.get(baseUrl + "/api/portal/restaurants");
     assert.equal(privateApi.status(), 503, "Unconfigured management API must remain closed");
-    const hiddenMenu = await page.goto(baseUrl + "/r/unpublished-test", { waitUntil: "domcontentloaded" });
-    assert.equal(hiddenMenu?.status(), 404, "Unpublished or missing menus must not be visible");
+    // Next.js streamed notFound UI may have HTTP 200; API must be 404 and page noindex.
+    const hiddenMenuAPI = await page.request.get(baseUrl + "/api/public/menu/unpublished-test");
+    assert.equal(hiddenMenuAPI.status(), 404, "Unpublished menu data must not be accessible");
+    await page.goto(baseUrl + "/r/unpublished-test", { waitUntil: "domcontentloaded" });
+    await page.getByRole("heading", { name: /هذه الصفحة غير موجودة/ }).waitFor();
+    await page.locator('meta[name="robots"][content*="noindex"]').waitFor();
 
     const orderResponse = await page.goto(baseUrl + "/order", { waitUntil: "domcontentloaded" });
     assert.equal(orderResponse?.status(), 200, "Standalone project order page should load");
