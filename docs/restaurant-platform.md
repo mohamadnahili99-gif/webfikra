@@ -13,7 +13,7 @@ In your Supabase project dashboard, open SQL Editor and run:
 
 `supabase/migrations/20261119_webfikra_platform.sql`
 
-The migration creates `wf_restaurants`, `wf_categories`, and `wf_items` with Row Level Security. Public users can read only **published** restaurants and visible menu entries. Authenticated users can edit only restaurants they own.
+The migration creates `wf_restaurants`, `wf_categories`, and `wf_items` with Row Level Security. Then run `supabase/migrations/20261119_webfikra_media.sql` to provision the public image bucket with owner-only uploads. Public users can read only **published** restaurants and visible menu entries. Authenticated users can edit only restaurants they own.
 
 The script is intended for a fresh WEBFIKRA schema. Review migration policies against any existing customized schema before applying. Use the database backup and migration history maintained in Supabase.
 
@@ -46,7 +46,7 @@ Set these for the relevant Vercel environment and deploy the branch after config
 Open `/restaurants/portal` after logging in.
 
 1. Create a restaurant with a unique slug, name, WhatsApp number in international digits, and branding.
-2. Add categories, then menu items with names, descriptions, prices, and HTTPS photo URLs.
+2. Add categories, then menu items with names, descriptions and prices. After saving a restaurant you can upload JPEG, PNG or WebP images (maximum 5 MB) or paste HTTPS image URLs. Uploads require the media SQL migration.
 3. Choose the USD or LBP currency, theme color, address and opening hours.
 4. Publish the restaurant when ready. Your public link is `https://your-domain/r/slug`.
 5. Open the QR link if you want to obtain a printable QR graphic. **QR rendering currently uses an external QR API, which receives only the public menu URL.**
@@ -65,7 +65,7 @@ The restaurant footer remains only `Design by webfikra.com` as the white-label s
 
 ## Security / deployment checklist
 
-- [ ] SQL migration applied, RLS and grants audited on your project
+- [ ] Restaurant schema and media-storage SQL migrations applied, RLS and grants audited on your project
 - [ ] Auth/email configuration and anti-abuse policies enabled
 - [ ] Keys set correctly in Vercel (no service-role key anywhere in app env)
 - [ ] Sign-in/signup, token refresh and sign-out tested with a real account
