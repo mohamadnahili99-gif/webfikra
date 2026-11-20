@@ -20,6 +20,8 @@ async function testDesktop() {
     await page.locator("h1").first().waitFor();
     assert.match(await page.locator("h1").first().innerText(), /مطعمك/);
     await page.screenshot({ path: "screenshots/desktop-home.png", animations: "disabled" });
+    const heroCta = await page.getByRole("link", { name: /لنصمّم موقعك/ }).boundingBox();
+    assert.ok(heroCta && heroCta.y + heroCta.height <= 900, "Primary desktop call to action should appear above the fold");
 
     await page.getByRole("button", { name: "Switch to English" }).click();
     assert.equal(await page.locator("main#home").getAttribute("lang"), "en");
