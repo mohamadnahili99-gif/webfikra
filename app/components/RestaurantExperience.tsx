@@ -74,7 +74,7 @@ export default function RestaurantExperience({ arabic }: Props) {
   }
 
   return (
-    <section id="experience" className="relative overflow-hidden border-y border-white/10 bg-[#171410] px-5 py-24 text-white md:py-32" dir={arabic ? "rtl" : "ltr"}>
+    <section id="experience" className="scroll-mt-24 relative overflow-hidden border-y border-white/10 bg-[#171410] px-5 py-24 text-white md:py-32" dir={arabic ? "rtl" : "ltr"}>
       <div className="pointer-events-none absolute left-1/2 top-1/2 h-[480px] w-[700px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#e98339]/10 blur-[120px]" />
       <div className="relative mx-auto max-w-7xl">
         <div className="mb-14 grid items-end gap-7 md:grid-cols-2">
